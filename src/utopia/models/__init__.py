@@ -13,6 +13,12 @@ from utopia.models.vector_ctrl import (
     Thread,
     ThreadConstraint,
 )
+from utopia.models.evidence import (
+    BehaviorEvent,
+    ContextSnapshot,
+    DerivedFeature,
+    SubjectiveCheckin,
+)
 
 __all__ = [
     "Operator",
@@ -26,4 +32,8 @@ __all__ = [
     "Thread",
     "ThreadConstraint",
     "AntiGoal",
+    "SubjectiveCheckin",
+    "BehaviorEvent",
+    "ContextSnapshot",
+    "DerivedFeature",
 ]
