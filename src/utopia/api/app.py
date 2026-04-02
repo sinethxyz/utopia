@@ -5,11 +5,15 @@ Minimal bootstrap — routes added per bounded context as they are built.
 
 from fastapi import FastAPI
 
+from utopia.api.routes.vector import router as vector_router
+
 app = FastAPI(
     title="Utopia",
     description="Private cognitive operating system and judgment refinery",
     version="0.1.0",
 )
+
+app.include_router(vector_router)
 
 
 @app.get("/health")
