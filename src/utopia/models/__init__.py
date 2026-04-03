@@ -5,6 +5,27 @@ Import all model modules here so that Base.metadata is fully populated.
 
 from utopia.models.core import Operator, Device
 from utopia.models.integration import OAuthConnection, Permission, WebhookReceipt
+from utopia.models.vector_ctrl import (
+    AntiGoal,
+    LifeArc,
+    Mission,
+    Season,
+    Thread,
+    ThreadConstraint,
+)
+from utopia.models.evidence import (
+    BehaviorEvent,
+    ContextSnapshot,
+    DerivedFeature,
+    SubjectiveCheckin,
+)
+from utopia.models.execution import (
+    BlockerEstimate,
+    PolicyDecision,
+    ReentryArtifact,
+    StateEstimate,
+    Trace,
+)
 
 __all__ = [
     "Operator",
@@ -12,4 +33,19 @@ __all__ = [
     "OAuthConnection",
     "Permission",
     "WebhookReceipt",
+    "LifeArc",
+    "Season",
+    "Mission",
+    "Thread",
+    "ThreadConstraint",
+    "AntiGoal",
+    "SubjectiveCheckin",
+    "BehaviorEvent",
+    "ContextSnapshot",
+    "DerivedFeature",
+    "StateEstimate",
+    "BlockerEstimate",
+    "ReentryArtifact",
+    "PolicyDecision",
+    "Trace",
 ]
