@@ -19,6 +19,13 @@ from utopia.models.evidence import (
     DerivedFeature,
     SubjectiveCheckin,
 )
+from utopia.models.execution import (
+    BlockerEstimate,
+    PolicyDecision,
+    ReentryArtifact,
+    StateEstimate,
+    Trace,
+)
 
 __all__ = [
     "Operator",
@@ -36,4 +43,9 @@ __all__ = [
     "BehaviorEvent",
     "ContextSnapshot",
     "DerivedFeature",
+    "StateEstimate",
+    "BlockerEstimate",
+    "ReentryArtifact",
+    "PolicyDecision",
+    "Trace",
 ]

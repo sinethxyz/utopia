@@ -35,3 +35,10 @@ def get_evidence_service(
 ):
     from utopia.services.evidence_service import EvidenceService
     return EvidenceService(session)
+
+
+def get_execution_service(
+    session: AsyncSession = Depends(get_db),
+):
+    from utopia.services.execution_service import ExecutionService
+    return ExecutionService(session)
