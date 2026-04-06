@@ -175,7 +175,7 @@ The system has persistence and API structure for:
 - review sessions with rule promotions and calibration records
 - full AI orchestration audit trail (model runs, retrieval runs, event log)
 
-All 8 bounded contexts plus Vector Search are complete with 60+ ORM models, 12 Alembic migrations, 9 service classes, and 75+ API endpoints. Three AI reasoning modules (state estimator, blocker classifier, policy selector) power the assessment pipeline.
+All 8 bounded contexts plus Vector Search are complete with 60+ ORM models, 13 Alembic migrations, 9 service classes, and 80+ API endpoints. Nine AI reasoning modules power the full AI Fabric. Three materialized views provide fast access to current state, active focus, and thread priority rankings. A comprehensive test suite covers service layer unit tests, AI module unit tests, and API route integration tests.
 
 #### Vector search
 Embedding storage and semantic retrieval via pgvector:
@@ -185,31 +185,37 @@ Includes ORM model, Pydantic schemas, `VectorSearchService` (with content-hash c
 
 ### AI Fabric
 
-Three core reasoning modules are implemented:
+Nine reasoning modules form the complete AI Fabric:
+
+**Core pipeline (Loop A):**
 - **State estimator** — classifies the operator into one of 10 operating states (recover, preserve, orient, clarify, reenter, execute, deep_work, close_loop, review, drift)
 - **Blocker classifier** — identifies the dominant blocker from 12 types (ambiguity, scope_overload, physiological_depletion, etc.)
 - **Policy selector** — selects an intervention kind and action depth matched to operator capacity
 
-All modules use Claude as the reasoning backend and persist results through the Execution service. The `POST /ai/assess` endpoint orchestrates the full pipeline: gather evidence → estimate state → classify blocker → select policy.
+**Extended modules:**
+- **Router** — intent classification for incoming operator requests, dispatching to the correct pipeline (assess, structure_problem, retrieve_context, interpret_physiology, check_contradictions, deliberate, etc.)
+- **Problem structurer** — decomposes raw problems into structured reasoning artifacts (objective, stakes, actors, constraints, assumptions, unknowns, irreversibilities, bottlenecks, narrative layer, distortion candidates)
+- **Context retriever** — RAG over the Aether knowledge graph via vector search, with Claude-powered synthesis of retrieved fragments
+- **Physiology interpreter** — translates raw WHOOP data (recovery, sleep, HRV, strain) into actionable capacity signals and action-depth ceilings
+- **Contradiction checker** — detects inconsistencies between operator narrative and evidence (narrative_vs_behavior, physiology_vs_claim, vector_vs_action, state_vs_depth, temporal_pattern)
+- **Council** — multi-perspective deliberation with 4 lenses (risk analyst, opportunity scout, contrarian, state advisor) and synthesis into consensus/tension points
 
-## What is not built yet
-
-### Remaining AI modules
-- router (intent classification)
-- problem structurer
-- context retriever (RAG over Aether)
-- physiology interpreter
-- contradiction checker
-- council (multi-perspective deliberation)
+All modules use Claude as the reasoning backend. The `POST /ai/assess` endpoint orchestrates the core pipeline. Additional endpoints: `POST /ai/route`, `POST /ai/structure-problem`, `POST /ai/retrieve`, `POST /ai/interpret-physiology`, `POST /ai/check-contradictions`, `POST /ai/deliberate`.
 
 ### Materialized views
-- current state and active focus views
-- thread priority rankings
+
+Migration M013 creates three materialized views for fast querying:
+- **`execution.mv_current_state`** — latest state estimate, blocker estimate, and policy decision per operator (single row per operator via LATERAL joins)
+- **`vector_ctrl.mv_active_focus`** — active season, top-priority mission, and most recent active thread per operator
+- **`vector_ctrl.mv_thread_priority`** — ranks all active threads by a composite priority score (mission priority, thread decay, reentry risk, ambiguity)
 
 ### Test suite
-- async test fixtures and conftest
-- service layer unit tests
-- API route integration tests
+
+Comprehensive test coverage across three layers:
+- **`tests/conftest.py`** — async fixtures with transactional rollback isolation, service factories, AI module mocks (Claude + embeddings), and FastAPI test client
+- **`tests/test_services.py`** — service layer unit tests for Evidence, Execution, and Reasoning services (checkins, state estimates, blocker estimates, policy decisions, traces, reentry artifacts, problems, contradiction reports)
+- **`tests/test_ai_modules.py`** — unit tests for all 9 AI modules with mocked Claude responses, including parse failure fallbacks
+- **`tests/test_routes.py`** — API route integration tests for health, evidence, execution, and all AI endpoints (assess, route, structure-problem, interpret-physiology, check-contradictions, deliberate)
 
 ## Architecture philosophy
 
@@ -254,6 +260,7 @@ migrations/
     010_review_tables.py
     011_system_audit_tables.py
     012_vector_embeddings.py
+    013_materialized_views.py
 
 src/utopia/
   api/
@@ -314,7 +321,19 @@ src/utopia/
     state_estimator.py
     blocker_classifier.py
     policy_selector.py
+    router.py
+    problem_structurer.py
+    context_retriever.py
+    physiology_interpreter.py
+    contradiction_checker.py
+    council.py
   config.py
   db.py
   enums.py
+
+tests/
+  conftest.py
+  test_services.py
+  test_ai_modules.py
+  test_routes.py
 ```
