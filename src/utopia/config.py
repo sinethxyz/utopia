@@ -19,5 +19,9 @@ class Settings(BaseSettings):
     anthropic_api_key: str = ""
     openai_api_key: str = ""
 
+    # Embeddings
+    embedding_model: str = "text-embedding-3-small"
+    embedding_dimensions: int = 1536
+
 
 settings = Settings()

@@ -76,6 +76,7 @@ from utopia.models.system_audit import (
     OutboxEvent,
     RetrievalRun,
 )
+from utopia.models.embedding import Embedding
 
 __all__ = [
     "Operator",
@@ -138,4 +139,5 @@ __all__ = [
     "RetrievalRun",
     "EventLog",
     "OutboxEvent",
+    "Embedding",
 ]

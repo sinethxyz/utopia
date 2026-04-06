@@ -77,3 +77,10 @@ def get_system_audit_service(
 ):
     from utopia.services.system_audit_service import SystemAuditService
     return SystemAuditService(session)
+
+
+def get_vector_search_service(
+    session: AsyncSession = Depends(get_db),
+):
+    from utopia.services.vector_search_service import VectorSearchService
+    return VectorSearchService(session)
