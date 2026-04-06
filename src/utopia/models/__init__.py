@@ -69,6 +69,13 @@ from utopia.models.review import (
     ReviewSession,
     RulePromotion,
 )
+from utopia.models.system_audit import (
+    EventLog,
+    ModelProvider,
+    ModelRun,
+    OutboxEvent,
+    RetrievalRun,
+)
 
 __all__ = [
     "Operator",
@@ -126,4 +133,9 @@ __all__ = [
     "RulePromotion",
     "PatternUpdate",
     "CalibrationRecord",
+    "ModelProvider",
+    "ModelRun",
+    "RetrievalRun",
+    "EventLog",
+    "OutboxEvent",
 ]

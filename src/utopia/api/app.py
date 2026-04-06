@@ -11,6 +11,7 @@ from utopia.api.routes.execution import router as execution_router
 from utopia.api.routes.physiology import router as physiology_router
 from utopia.api.routes.reasoning import router as reasoning_router
 from utopia.api.routes.review import router as review_router
+from utopia.api.routes.system_audit import router as system_audit_router
 from utopia.api.routes.vector import router as vector_router
 
 app = FastAPI(
@@ -26,6 +27,7 @@ app.include_router(physiology_router)
 app.include_router(aether_router)
 app.include_router(reasoning_router)
 app.include_router(review_router)
+app.include_router(system_audit_router)
 
 
 @app.get("/health")

@@ -70,3 +70,10 @@ def get_review_service(
 ):
     from utopia.services.review_service import ReviewService
     return ReviewService(session)
+
+
+def get_system_audit_service(
+    session: AsyncSession = Depends(get_db),
+):
+    from utopia.services.system_audit_service import SystemAuditService
+    return SystemAuditService(session)
