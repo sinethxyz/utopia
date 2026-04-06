@@ -62,6 +62,13 @@ from utopia.models.reasoning import (
     Problem,
     ProblemStructure,
 )
+from utopia.models.review import (
+    CalibrationRecord,
+    Closure,
+    PatternUpdate,
+    ReviewSession,
+    RulePromotion,
+)
 
 __all__ = [
     "Operator",
@@ -114,4 +121,9 @@ __all__ = [
     "DecisionBrief",
     "OptionPath",
     "ContradictionReport",
+    "Closure",
+    "ReviewSession",
+    "RulePromotion",
+    "PatternUpdate",
+    "CalibrationRecord",
 ]
