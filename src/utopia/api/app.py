@@ -6,6 +6,7 @@ Minimal bootstrap — routes added per bounded context as they are built.
 from fastapi import FastAPI
 
 from utopia.api.routes.aether import router as aether_router
+from utopia.api.routes.ai import router as ai_router
 from utopia.api.routes.evidence import router as evidence_router
 from utopia.api.routes.execution import router as execution_router
 from utopia.api.routes.physiology import router as physiology_router
@@ -28,6 +29,7 @@ app.include_router(aether_router)
 app.include_router(reasoning_router)
 app.include_router(review_router)
 app.include_router(system_audit_router)
+app.include_router(ai_router)
 
 
 @app.get("/health")
