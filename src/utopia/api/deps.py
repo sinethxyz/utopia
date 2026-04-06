@@ -63,3 +63,10 @@ def get_reasoning_service(
 ):
     from utopia.services.reasoning_service import ReasoningService
     return ReasoningService(session)
+
+
+def get_review_service(
+    session: AsyncSession = Depends(get_db),
+):
+    from utopia.services.review_service import ReviewService
+    return ReviewService(session)
