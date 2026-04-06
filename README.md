@@ -34,7 +34,7 @@ The architecture is split into bounded contexts that map to different layers of 
 - Python 3.12+
 - FastAPI
 - SQLAlchemy 2.x async
-- Alembic (11 migrations)
+- Alembic (12 migrations)
 - PostgreSQL 16 + pgvector
 - Docker Compose local database setup
 - environment based config via `pydantic-settings`
@@ -175,28 +175,41 @@ The system has persistence and API structure for:
 - review sessions with rule promotions and calibration records
 - full AI orchestration audit trail (model runs, retrieval runs, event log)
 
-All 8 bounded contexts are complete with 60+ ORM models, 11 Alembic migrations, 8 service classes, and 70+ API endpoints.
+All 8 bounded contexts plus Vector Search are complete with 60+ ORM models, 12 Alembic migrations, 9 service classes, and 75+ API endpoints. Three AI reasoning modules (state estimator, blocker classifier, policy selector) power the assessment pipeline.
+
+#### Vector search
+Embedding storage and semantic retrieval via pgvector:
+- `vector.embeddings`
+
+Includes ORM model, Pydantic schemas, `VectorSearchService` (with content-hash change detection, batch embedding, cosine similarity search, entity-to-entity similarity), API routes. Powered by OpenAI `text-embedding-3-small` (1536 dimensions) with HNSW index.
+
+### AI Fabric
+
+Three core reasoning modules are implemented:
+- **State estimator** — classifies the operator into one of 10 operating states (recover, preserve, orient, clarify, reenter, execute, deep_work, close_loop, review, drift)
+- **Blocker classifier** — identifies the dominant blocker from 12 types (ambiguity, scope_overload, physiological_depletion, etc.)
+- **Policy selector** — selects an intervention kind and action depth matched to operator capacity
+
+All modules use Claude as the reasoning backend and persist results through the Execution service. The `POST /ai/assess` endpoint orchestrates the full pipeline: gather evidence → estimate state → classify blocker → select policy.
 
 ## What is not built yet
 
-### Vector search
-- embeddings for Aether entities
-- semantic retrieval via pgvector
-- materialized views for current state and active focus
-
-### AI Fabric
-Planned reasoning modules:
-- router
-- state estimator
-- blocker classifier
+### Remaining AI modules
+- router (intent classification)
 - problem structurer
-- context retriever
+- context retriever (RAG over Aether)
 - physiology interpreter
 - contradiction checker
-- council
-- policy selector
+- council (multi-perspective deliberation)
 
-These modules will consume evidence and produce inference artifacts (state estimates, blocker estimates, policy decisions) through the existing Execution and Reasoning schemas.
+### Materialized views
+- current state and active focus views
+- thread priority rankings
+
+### Test suite
+- async test fixtures and conftest
+- service layer unit tests
+- API route integration tests
 
 ## Architecture philosophy
 
@@ -240,6 +253,7 @@ migrations/
     009_reasoning_tables.py
     010_review_tables.py
     011_system_audit_tables.py
+    012_vector_embeddings.py
 
 src/utopia/
   api/
@@ -254,6 +268,8 @@ src/utopia/
       reasoning.py
       review.py
       system_audit.py
+      ai.py
+      vector_search.py
   models/
     core.py
     integration.py
@@ -265,6 +281,7 @@ src/utopia/
     reasoning.py
     review.py
     system_audit.py
+    embedding.py
   schemas/
     vector_ctrl.py
     evidence.py
@@ -283,12 +300,20 @@ src/utopia/
     reasoning_service.py
     review_service.py
     system_audit_service.py
+    vector_search_service.py
   integrations/
     whoop/
       client.py
       mapper.py
       sync.py
   ai/
+    providers/
+      claude.py
+      openai_embeddings.py
+    assess.py
+    state_estimator.py
+    blocker_classifier.py
+    policy_selector.py
   config.py
   db.py
   enums.py
