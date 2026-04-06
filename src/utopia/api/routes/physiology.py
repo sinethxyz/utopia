@@ -4,6 +4,7 @@ import datetime
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+from pydantic import BaseModel
 
 from utopia.api.deps import get_physiology_service
 from utopia.schemas.physiology import (
@@ -27,6 +28,57 @@ from utopia.schemas.physiology import (
 from utopia.services.physiology_service import PhysiologyService
 
 router = APIRouter(prefix="/physiology", tags=["physiology"])
+
+
+# ---------------------------------------------------------------------------
+# WHOOP Sync
+# ---------------------------------------------------------------------------
+
+class WhoopSyncRequest(BaseModel):
+    operator_id: uuid.UUID
+    access_token: str
+    start: str | None = None
+    end: str | None = None
+
+
+class WhoopSyncResponse(BaseModel):
+    cycles_synced: int
+    sleeps_synced: int
+    recoveries_synced: int
+    workouts_synced: int
+    body_measurement_synced: bool
+    errors: list[str]
+
+
+@router.post("/whoop/sync", response_model=WhoopSyncResponse, status_code=200)
+async def sync_whoop(
+    data: WhoopSyncRequest,
+    svc: PhysiologyService = Depends(get_physiology_service),
+) -> WhoopSyncResponse:
+    """Trigger a full WHOOP data sync for an operator.
+
+    Fetches cycles, sleeps, recoveries, workouts, and body measurements
+    from the WHOOP API and persists them through the PhysiologyService.
+    """
+    from utopia.integrations.whoop.client import WhoopClient
+    from utopia.integrations.whoop.sync import sync_whoop_data
+
+    async with WhoopClient(data.access_token) as client:
+        result = await sync_whoop_data(
+            client,
+            data.operator_id,
+            svc,
+            start=data.start,
+            end=data.end,
+        )
+    return WhoopSyncResponse(
+        cycles_synced=result.cycles_synced,
+        sleeps_synced=result.sleeps_synced,
+        recoveries_synced=result.recoveries_synced,
+        workouts_synced=result.workouts_synced,
+        body_measurement_synced=result.body_measurement_synced,
+        errors=result.errors,
+    )
 
 
 # ---------------------------------------------------------------------------
