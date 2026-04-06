@@ -42,3 +42,24 @@ def get_execution_service(
 ):
     from utopia.services.execution_service import ExecutionService
     return ExecutionService(session)
+
+
+def get_physiology_service(
+    session: AsyncSession = Depends(get_db),
+):
+    from utopia.services.physiology_service import PhysiologyService
+    return PhysiologyService(session)
+
+
+def get_aether_service(
+    session: AsyncSession = Depends(get_db),
+):
+    from utopia.services.aether_service import AetherService
+    return AetherService(session)
+
+
+def get_reasoning_service(
+    session: AsyncSession = Depends(get_db),
+):
+    from utopia.services.reasoning_service import ReasoningService
+    return ReasoningService(session)
