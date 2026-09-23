@@ -7,8 +7,26 @@ on:
       - "cleanup/**"
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
+  secrets:
+    name: Secret history scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_COMMENTS: "false"
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: "false"
+
   test:
+    name: Python / migrations / tests
     runs-on: ubuntu-latest
 
     services:
@@ -33,9 +51,9 @@ jobs:
       OPENAI_API_KEY: test
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip
@@ -46,8 +64,16 @@ jobs:
       - name: Compile
         run: python -m compileall -q src tests migrations
 
-      - name: Apply migrations
+      - name: Ruff
+        run: ruff check .
+
+      - name: Apply migrations from zero
         run: alembic upgrade head
+
+      - name: Verify cleanup migration is reversible
+        run: |
+          alembic downgrade 013
+          alembic upgrade head
 
       - name: Test
         run: pytest -q
