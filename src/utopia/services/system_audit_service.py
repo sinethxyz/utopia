@@ -9,7 +9,7 @@ import uuid as _uuid
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from uuid_utils import uuid7
+from utopia.ids import new_uuid7
 
 from utopia.enums import ProcessingStatus
 from utopia.models.system_audit import (
@@ -49,7 +49,7 @@ class SystemAuditService:
         self, data: ModelProviderCreate
     ) -> ModelProvider:
         provider = ModelProvider(
-            id=uuid7(),
+            id=new_uuid7(),
             name=data.name,
             provider_kind=data.provider_kind,
             api_base_url=data.api_base_url,
@@ -82,7 +82,7 @@ class SystemAuditService:
 
     async def record_model_run(self, data: ModelRunCreate) -> ModelRun:
         run = ModelRun(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             provider_id=data.provider_id,
             model_name=data.model_name,
@@ -127,7 +127,7 @@ class SystemAuditService:
         self, data: RetrievalRunCreate
     ) -> RetrievalRun:
         run = RetrievalRun(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             model_run_id=data.model_run_id,
             collection=data.collection,
@@ -170,7 +170,7 @@ class SystemAuditService:
 
     async def log_event(self, data: EventLogCreate) -> EventLog:
         event = EventLog(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             event_type=data.event_type,
             source=data.source,
@@ -211,7 +211,7 @@ class SystemAuditService:
 
     async def create_outbox_event(self, data: OutboxEventCreate) -> OutboxEvent:
         event = OutboxEvent(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             event_type=data.event_type,
             destination=data.destination,
