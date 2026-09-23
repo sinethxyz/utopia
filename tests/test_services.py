@@ -15,7 +15,7 @@ import uuid
 from decimal import Decimal
 
 import pytest
-from uuid_utils import uuid7
+from utopia.ids import new_uuid7
 
 from utopia.enums import (
     ActionDepth,
@@ -244,14 +244,14 @@ class TestExecutionService:
         from utopia.models.vector_ctrl import Mission, Thread
 
         mission = Mission(
-            id=uuid7(), operator_id=operator_id, title="Test Mission",
+            id=new_uuid7(), operator_id=operator_id, title="Test Mission",
             mission_kind=MissionKind.technical, status=Status.active,
         )
         db_session.add(mission)
         await db_session.flush()
 
         thread = Thread(
-            id=uuid7(), operator_id=operator_id, mission_id=mission.id,
+            id=new_uuid7(), operator_id=operator_id, mission_id=mission.id,
             title="Test Thread", thread_kind=ThreadKind.build, status=ThreadStatus.active,
         )
         db_session.add(thread)
