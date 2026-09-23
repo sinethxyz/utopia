@@ -30,7 +30,13 @@ Its direct parent is:
 
 `1b2b5dba817610711a38aea382fe563413ee6dab` — `Add ADHD visual prosthetic thesis`
 
-That parent is the last repository state before the public-preservation reframing began and is therefore the clearest historical reference point currently established from Git history.
+That commit added only a thesis document from a separate project. It is therefore excluded from the preserved Utopia artifact and is not used as the Utopia historical reference point.
+
+The relevant Utopia state immediately before that unrelated addition is:
+
+`656c32b70cfac7a5ad7b94bb31451425fb6139bf`
+
+This is the selected historical reference point for the preserved Utopia artifact.
 
 ## Proposed historical tag
 
@@ -40,14 +46,14 @@ If the owner wants an immutable public marker, the proposed tag is:
 
 pointing exactly to:
 
-`1b2b5dba817610711a38aea382fe563413ee6dab`
+`656c32b70cfac7a5ad7b94bb31451425fb6139bf`
 
 The tag has **not** been created by this cleanup. Creating it is an owner decision.
 
 ## Chronology
 
 - **2026-04-02 to 2026-04-06** — core Utopia implementation assembled: database layers, services, WHOOP integration, reasoning modules, semantic retrieval, review/calibration structures, and tests.
-- **2026-04-20** — the historical repository received the ADHD visual-prosthetic thesis document.
+- **2026-04-20** — an unrelated ADHD visual-prosthetic thesis document was added to the repository; the public-preservation cleanup excludes it from the current Utopia artifact.
 - **2026-09-23** — public-preservation work began with the Neurocognitive System reframing, static audit, architecture reconstruction, correctness fixes, and release hygiene.
 
 The intended Git story is therefore:
