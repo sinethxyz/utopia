@@ -35,8 +35,11 @@ class WhoopAPIError(Exception):
 class WhoopClient:
     """Async HTTP client for the WHOOP Developer API (v1).
 
-    Requires a valid OAuth access token obtained via the WHOOP OAuth flow
-    (stored in integration.oauth_connections).
+    Requires a valid OAuth access token supplied by the caller.
+
+    The historical repository contains OAuth/token-shaped persistence models,
+    but it does not implement a complete encrypted OAuth refresh/rotation
+    lifecycle. The sync route currently accepts an access token directly.
 
     Usage::
 

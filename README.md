@@ -3,120 +3,125 @@
 > **Historical codename: Utopia**  
 > **Status: historical / inactive / preserved**
 
-Neurocognitive System is a historical experiment in **multimodal cognitive-state estimation, continuity, reasoning, and adaptive control**.
+An early multimodal cognitive-state, continuity, and adaptive-control architecture.
 
-It began from one assumption:
+**The operator is not stable.**
 
-**the operator is not stable.**
+Attention changes. Energy changes. Context disappears. Re-entry has a cost. Self-report is noisy. Behavior is noisy. Physiology is noisy. Any future neurophysiology is noisy too.
 
-Attention changes. Energy changes. Context disappears. Re-entry has a cost. Self-report is useful but imperfect. Physiological and behavioral signals are useful but imperfect. The intended architecture was therefore not a task manager or an AI that simply "knows" the user.
+Utopia explored a system that could form explicit, testable hypotheses about an operator's current cognitive/operational state from multiple imperfect signals, select an appropriate intervention, observe what happened next, and retain the result for later review.
 
-It was a system for maintaining explicit, testable hypotheses about the operator's current state and deciding what depth of action was appropriate.
+The compressed loop is:
 
 ```text
-Direction
-    ↓
-Sensing
-    ↓
-Observations
-    ↓
-Features
-    ↓
-Evidence
-    ↓
-Inference
-    ↓
-Policy
-    ↓
-Action / Re-entry
-    ↓
-Outcome
-    ↓
-Calibration
-    ↺
+Observation → Evidence → Inference → Policy → Outcome → Calibration
 ```
 
 **The implementation is historical. The questions were not.**
 
----
+## In 30 seconds
 
-## What this repository contains
+**What exists:** a Python/FastAPI/PostgreSQL prototype with directional hierarchy, multimodal evidence records, WHOOP ingestion, state/blocker inference, policy selection, re-entry artifacts, typed memory, semantic retrieval, structured reasoning, traces, review/calibration storage, and audit models.
 
-The historical implementation includes:
+**What does not exist:** production authentication, a complete OAuth lifecycle, automatic calibration learning, complete automatic model/retrieval auditing, a generic sensor-adapter runtime, or EEG/Neurosity integration.
 
-- Python 3.12+
-- FastAPI
-- PostgreSQL 16 + pgvector
-- SQLAlchemy + Alembic
-- 13 historical database migrations + 1 cleanup migration
-- typed ORM and Pydantic models
-- directional hierarchy: life arcs → seasons → missions → threads
-- subjective, behavioral, contextual, and derived evidence
-- WHOOP ingestion for sleep, recovery, cycles, workouts, and body measurements
-- state estimation, blocker classification, and policy selection
-- typed memory and semantic retrieval
-- structured problem reasoning
-- re-entry artifacts and execution traces
-- review and calibration records
-- model/retrieval audit data models
-- materialized read models
-- service, AI-module, and API tests
+**Why preserve it:** the old implementation already contained durable primitives around state, evidence, continuity, policy, re-entry, auditability, and calibration. The cleanup makes those primitives legible without pretending the prototype became a modern production system.
 
-The Python package remains named `utopia` so the historical implementation stays intact.
+**Where to look next:**
 
----
-
-## Multimodal intent
-
-WHOOP was the first implemented external sensor, not the intended endpoint.
-
-The longer-term design was sensor-agnostic. It was meant to accept additional evidence sources such as:
-
-- behavioral telemetry
-- environment/context sensors
-- additional wearables
-- biomarkers
-- neurophysiological interfaces such as EEG devices, including systems in the class of Neurosity
-
-The goal was **not** to make any sensor authoritative.
-
-The intended model was:
-
-```text
-imperfect sensor
-    ↓
-observation
-    ↓
-derived feature
-    ↓
-evidence
-    ↓
-state hypothesis
-    ↓
-policy
-    ↓
-outcome
-    ↓
-calibration
-```
-
-A future EEG integration would therefore contribute observations or derived features. It would not directly declare a cognitive state or diagnosis.
+- [Architecture overview](docs/architecture/overview.md)
+- [Implemented vs. intended](#implemented-vs-intended)
+- [Historical provenance](docs/history/provenance.md)
+- [Original Utopia material](docs/history/README.md)
+- [Technical debt / reconstruction boundary](docs/technical-debt.md)
+- [Public-release audit](docs/audit/public-release-2026-09-23.md)
+- [Release readiness](docs/release-readiness.md)
 
 ---
 
 ## Architecture
 
-The cleaned architecture is documented in:
+```mermaid
+flowchart TD
+    D[Direction] --> S[Sensors]
 
-- [Architecture overview](docs/architecture/overview.md)
-- [RFC-0001: Neurocognitive System](docs/rfcs/RFC-0001-neurocognitive-system.md)
-- [RFC-0002: Observation, Evidence, and Inference](docs/rfcs/RFC-0002-observation-evidence-inference.md)
-- [Sensor architecture](docs/architecture/sensors.md)
-- [RFC-0003: Sensor Adapter Contract](docs/rfcs/RFC-0003-sensor-adapter-contract.md)
-- [Historical terminology](docs/history/terminology.md)
-- [Static codebase audit](docs/audit/2026-09-23.md)
+    S --> SUB[Subjective]
+    S --> BEH[Behavioral]
+    S --> CTX[Contextual]
+    S --> PHY["Physiological / WHOOP<br/>IMPLEMENTED"]
+    S -.-> EEG["Neurophysiological / EEG<br/>FUTURE / INTENDED"]
 
-The original Utopia documents are preserved unchanged under [docs/history](docs/history/README.md).
+    SUB --> O[Observations]
+    BEH --> O
+    CTX --> O
+    PHY --> O
+    EEG -.-> O
+
+    O --> F[Features]
+    F --> E[Evidence Bundle]
+    E --> I["Inference<br/>state · blocker · contradiction"]
+    I --> P[Policy]
+    P --> A[Action / Re-entry]
+    A --> T[Trace / Outcome]
+    T --> C[Review / Calibration]
+    C --> E
+
+    M["Typed Memory / Reasoning"] -. context .-> I
+    T -. learning .-> M
+```
+
+The cleaned architectural sequence is:
+
+```text
+Direction
+→ Sensing
+→ Observations
+→ Features
+→ Evidence
+→ Inference
+→ Policy
+→ Action / Re-entry
+→ Outcome
+→ Calibration
+↺
+```
+
+The important boundary is:
+
+**observation ≠ evidence ≠ inference ≠ policy ≠ truth**
+
+A sensor reading is not a conclusion. An inference is a hypothesis. A policy is something to try. An outcome is evidence about whether the earlier hypothesis and policy were useful.
+
+---
+
+## Implemented vs. intended
+
+This table is derived from the preserved code and cleanup audit.
+
+| Capability | Historical status | Notes |
+| --- | --- | --- |
+| Direction hierarchy | **Implemented** | Life arcs → seasons → missions → threads |
+| Subjective evidence | **Implemented** | Check-ins with bounded state signals and free text |
+| Behavioral evidence | **Implemented** | Event records such as failed starts and thread switching |
+| Context evidence | **Implemented** | Environment, interruptions, available time, active window |
+| WHOOP integration | **Implemented** | API client, mapping, sync, and physiology persistence |
+| State estimator | **Implemented** | Provider-backed historical inference module |
+| Blocker classifier | **Implemented** | Typed blocker hypotheses with confidence/evidence |
+| Policy selector | **Implemented** | Intervention type, action depth, next move, rationale |
+| Re-entry artifacts | **Implemented** | Continuity objects for interrupted threads |
+| Typed memory / Aether | **Substantially implemented** | Sources, concepts, mechanisms, heuristics, rules, patterns, graph edges, etc. |
+| Semantic retrieval | **Implemented** | pgvector retrieval; cleanup scopes embedding identity and retrieval by operator |
+| Structured reasoning artifacts | **Implemented** | Problems, structures, interrogations, briefs, options, contradictions |
+| Review/calibration storage | **Implemented** | Review sessions, promotions, pattern updates, calibration records |
+| Model/retrieval audit storage | **Implemented as storage** | Automatic end-to-end audit wiring was not completed |
+| Materialized read models | **Implemented** | Automatic refresh orchestration was not completed |
+| Automatic calibration feedback | **Not completed** | Stored calibration does not automatically reweight future inference/policy |
+| Complete OAuth lifecycle | **Not completed** | Token-shaped models exist; full encrypted refresh/rotation lifecycle does not |
+| Production authentication/authorization | **Not completed** | Historical API is a trusted/private prototype |
+| Generic `SensorAdapter` runtime | **Proposed reconstruction** | Modern architectural extension point, not a historical runtime subsystem |
+| EEG / Neurosity integration | **Intended, not implemented** | Future neurophysiological evidence source only |
+
+The repository intentionally keeps these statuses separate. A modern reconstruction document does not retroactively make an intended subsystem historical implementation.
 
 ---
 
@@ -126,41 +131,51 @@ The original Utopia documents are preserved unchanged under [docs/history](docs/
 
 Historical name: **Vector**.
 
-Direction represents what matters:
-
 ```text
 life arc → season → mission → thread
 ```
 
-It exists to distinguish useful motion from drift.
+Direction distinguishes useful motion from drift.
 
-### Sensing and Evidence
+### Sensing, observations, and evidence
 
-The system records subjective, behavioral, contextual, and physiological signals.
+The historical system records subjective, behavioral, contextual, derived, and physiological information.
 
-The cleaned architecture separates:
+WHOOP is the implemented external sensor integration.
 
-**observation ≠ evidence ≠ inference**
+The cleaned architecture makes the boundary more explicit:
 
-A measurement is not automatically a conclusion.
+```text
+imperfect source
+    ↓
+observation
+    ↓
+feature
+    ↓
+evidence
+    ↓
+hypothesis
+```
+
+Future EEG or other neurophysiology belongs at the source/observation side of that boundary. It is **not implemented here**, and it would not be allowed to directly declare a diagnosis or authoritative state.
 
 ### Inference
 
-The historical AI Fabric estimates things such as:
+Historical AI modules estimate:
 
-- current operating state
+- operating state
 - dominant blocker
 - contradictions between narrative and evidence
 
-Inference should remain explicit about confidence, provenance, and failure.
+The historical runtime also contains fallback behavior on model/parse failure. The reconstruction identifies explicit inference-failure status as unfinished architectural work rather than presenting fallback values as ideal design.
 
 ### Policy
 
 Historical name: **Schrödinger**.
 
-Policy selects an intervention and action depth based on available evidence and inferred state.
+Policy selects an intervention and action depth from the current evidence and inferred condition.
 
-A policy decision is a hypothesis about what to try next, not ground truth.
+A policy decision is a testable proposal, not an oracle.
 
 ### Re-entry
 
@@ -179,86 +194,51 @@ A re-entry artifact preserves:
 
 Historical name: **Aether**.
 
-The system stores typed cognitive objects rather than treating all memory as notes:
+Instead of treating all memory as generic notes, the prototype stores typed objects such as concepts, mechanisms, trade-offs, failure modes, heuristics, diagnostic questions, protocols, cases, rules, patterns, and graph edges.
 
-- concepts
-- mechanisms
-- trade-offs
-- failure modes
-- heuristics
-- diagnostic questions
-- protocols
-- cases
-- rules
-- patterns
-- explicit graph edges
+### Outcome and calibration
 
-### Feedback and Calibration
+Traces record what happened after an action. Review/calibration structures preserve later evaluation.
 
-The historical implementation records traces, reviews, rule promotions, pattern updates, and calibration records.
-
-The intended end-state was a real feedback loop:
+The historical implementation models more of this loop than it automatically executes:
 
 ```text
-prediction → action → outcome → error → reliability update
+prediction → action → outcome → error/usefulness → future reliability
 ```
 
-The historical code models this loop more completely than it executes it.
+Automatic reliability updating was not completed.
 
 ---
 
-## What is implemented vs. what was intended
+## Historical provenance
 
-This repository intentionally distinguishes implementation from architecture.
+Utopia is the historical project/codename. Neurocognitive System is the current descriptive framing.
 
-### Implemented
+The original architecture material remains under [docs/history](docs/history/README.md) with its historical assumptions and terminology intact.
 
-Substantial backend/domain infrastructure exists for:
+The selected historical Utopia reference point is the last Utopia-specific repository state before an unrelated thesis document was added and before the later public-preservation reframing:
 
-- Direction / Vector
-- Evidence
-- Execution
-- Physiology
-- Aether
-- Reasoning
-- Review
-- System Audit
-- vector search
-- WHOOP ingestion
-- AI reasoning modules
+`656c32b70cfac7a5ad7b94bb31451425fb6139bf`
 
-### Incomplete or architectural
+A proposed, **not yet created**, historical tag is:
 
-Examples include:
+`historical-utopia-v0.1`
 
-- a complete authentication/authorization boundary
-- automatic model/retrieval audit wiring
-- a full encrypted OAuth/token lifecycle
-- automatic materialized-view refresh
-- calibration automatically changing future model/rule weighting
-- the complete cross-domain control loop
-- general sensor-adapter abstractions
-- EEG / Neurosity integration
-
-These are documented as unfinished rather than presented as completed features.
+See [Historical provenance](docs/history/provenance.md) for the exact chronology and why that commit was selected.
 
 ---
 
-## Trust boundary
+## Trust and medical boundaries
 
 **Do not expose the historical API directly to an untrusted network.**
 
-The current implementation was built as private prototype software and does not contain a complete authentication and authorization boundary.
+The current code does not contain a complete production authentication/authorization boundary. The cleanup fixes operator scoping in semantic retrieval and known nested-resource identity mismatches, but it does not retrofit a new security architecture across the old prototype.
 
-See [SECURITY.md](SECURITY.md).
-
----
-
-## Medical boundary
+See [SECURITY.md](SECURITY.md) and [Technical debt](docs/technical-debt.md).
 
 Neurocognitive System is **not a medical diagnostic system**.
 
-Physiological or future neurophysiological inputs are treated as imperfect evidence about operational state and usable capacity. They are not a basis for diagnosing medical or psychiatric conditions.
+Subjective, behavioral, physiological, and any future neurophysiological signals are treated as imperfect evidence about operational state and usable capacity. They are not a basis for diagnosing medical or psychiatric conditions.
 
 ---
 
@@ -274,13 +254,14 @@ src/utopia/
   ai/                  # historical reasoning runtime
 
 migrations/
-  versions/            # historical migrations + cleanup migrations
+  versions/            # 13 historical migrations + cleanup migration 014
 
 docs/
   architecture/        # cleaned architecture
-  rfcs/                # redesign contracts
-  audit/               # static audit record
-  history/             # original Utopia design material
+  rfcs/                # reconstruction contracts
+  audit/               # static + public-release audits
+  history/             # preserved Utopia material + provenance
+  technical-debt.md
 
 tests/
   test_services.py
@@ -292,17 +273,74 @@ tests/
 
 ## Local inspection
 
-This repository is preserved primarily for architecture inspection and experimentation.
+Python 3.12+ and Docker are expected.
 
 ```bash
 cp .env.example .env
 docker compose up -d
-pip install -e ".[dev]"
+python -m pip install -e ".[dev]"
 alembic upgrade head
-pytest
 ```
 
+The Docker PostgreSQL port is bound to loopback by default.
+
+### Tests
+
+Tests intentionally refuse to run against a database whose name does not end in `_test`.
+
+Create an isolated test database once:
+
+```bash
+docker compose exec postgres createdb -U utopia utopia_test
+```
+
+Then point both database URLs at it:
+
+```bash
+export DATABASE_URL=postgresql+asyncpg://utopia:utopia@localhost:5432/utopia_test
+export DATABASE_URL_SYNC=postgresql+psycopg://utopia:utopia@localhost:5432/utopia_test
+
+alembic upgrade head
+pytest -q
+ruff check --select E4,E7,E9,F src tests migrations/env.py migrations/versions/014_operator_scoped_embeddings.py
+```
+
+CI additionally verifies that cleanup migration 014 can downgrade to 013 and upgrade to head again.
+
+The 13 historical migrations are compiled and executed, but are intentionally not reformatted to modern lint style during preservation.
+
 Provider keys are optional unless exercising the corresponding external integrations.
+
+---
+
+## Security audit
+
+The cleanup CI performs a full-history Gitleaks scan using a checkout with `fetch-depth: 0`.
+
+The release audit also reviews the tracked tree, environment examples, ignored artifact classes, Docker binding defaults, and trust boundary.
+
+See [Public-release audit — 2026-09-23](docs/audit/public-release-2026-09-23.md) for results and explicit limitations.
+
+A green scanner is evidence, not proof that a secret has never existed.
+
+---
+
+## Further architecture documents
+
+- [Architecture overview](docs/architecture/overview.md)
+- [Sensor architecture](docs/architecture/sensors.md)
+- [RFC-0001: Neurocognitive System](docs/rfcs/RFC-0001-neurocognitive-system.md)
+- [RFC-0002: Observation, Evidence, and Inference](docs/rfcs/RFC-0002-observation-evidence-inference.md)
+- [RFC-0003: Sensor Adapter Contract](docs/rfcs/RFC-0003-sensor-adapter-contract.md)
+- [Historical terminology](docs/history/terminology.md)
+- [Static audit — 2026-09-23](docs/audit/2026-09-23.md)
+- [Technical debt / reconstruction boundary](docs/technical-debt.md)
+
+---
+
+## License
+
+Licensed under the [Apache License 2.0](LICENSE).
 
 ---
 
@@ -310,6 +348,6 @@ Provider keys are optional unless exercising the corresponding external integrat
 
 There is no active product roadmap for the historical Utopia application.
 
-The cleanup exists to expose the durable architectural primitives without rewriting the prototype into something it never was.
+This cleanup preserves the implementation, fixes high-confidence correctness and release-safety issues, and documents the durable architectural primitives without rewriting the prototype into something it never was.
 
 **The implementation is historical. The questions were not.**
