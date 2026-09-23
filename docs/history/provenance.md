@@ -26,17 +26,11 @@ The first explicit Neurocognitive System reframing on `main` is commit:
 
 `82dafca1f4dfccf8ea3e5f7defb3c6f3dff516ec` — `docs: reframe Utopia as historical Neurocognitive System`
 
-Its direct parent is:
-
-`1b2b5dba817610711a38aea382fe563413ee6dab` — `Add ADHD visual prosthetic thesis`
-
-That commit added only a thesis document from a separate project. It is therefore excluded from the preserved Utopia artifact and is not used as the Utopia historical reference point.
-
-The relevant Utopia state immediately before that unrelated addition is:
+The selected Utopia-specific historical reference point is:
 
 `656c32b70cfac7a5ad7b94bb31451425fb6139bf`
 
-This is the selected historical reference point for the preserved Utopia artifact.
+This is the last relevant Utopia repository state before unrelated non-Utopia material entered the repository and before the later public-preservation reframing. The unrelated material is intentionally excluded from the current artifact and proposed historical tag.
 
 ## Proposed historical tag
 
@@ -53,7 +47,6 @@ The tag has **not** been created by this cleanup. Creating it is an owner decisi
 ## Chronology
 
 - **2026-04-02 to 2026-04-06** — core Utopia implementation assembled: database layers, services, WHOOP integration, reasoning modules, semantic retrieval, review/calibration structures, and tests.
-- **2026-04-20** — an unrelated ADHD visual-prosthetic thesis document was added to the repository; the public-preservation cleanup excludes it from the current Utopia artifact.
 - **2026-09-23** — public-preservation work began with the Neurocognitive System reframing, static audit, architecture reconstruction, correctness fixes, and release hygiene.
 
 The intended Git story is therefore:
