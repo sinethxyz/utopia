@@ -35,6 +35,7 @@ Observation → Evidence → Inference → Policy → Outcome → Calibration
 - [Original Utopia material](docs/history/README.md)
 - [Technical debt / reconstruction boundary](docs/technical-debt.md)
 - [Public-release audit](docs/audit/public-release-2026-09-23.md)
+- [Release readiness](docs/release-readiness.md)
 
 ---
 
