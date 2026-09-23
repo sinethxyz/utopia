@@ -15,7 +15,7 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import ENUM, JSONB
 
 revision: str = "011"
 down_revision: Union[str, None] = "010"
@@ -152,7 +152,7 @@ def upgrade() -> None:
         sa.Column("event_type", sa.Text(), nullable=False),
         sa.Column("destination", sa.Text(), nullable=False),
         sa.Column("payload", JSONB(), nullable=False, server_default="{}"),
-        sa.Column("status", sa.Enum("pending", "processed", "failed", name="processing_status", schema="core", create_type=False), nullable=False),
+        sa.Column("status", ENUM("pending", "processed", "failed", name="processing_status", schema="core", create_type=False), nullable=False),
         sa.Column("attempts", sa.Integer(), nullable=False, server_default="0"),
         sa.Column("last_error", sa.Text(), nullable=True),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.text("now()")),

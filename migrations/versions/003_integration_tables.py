@@ -12,7 +12,7 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy.dialects.postgresql import ARRAY, BYTEA, JSONB
+from sqlalchemy.dialects.postgresql import ARRAY, BYTEA, ENUM, JSONB
 
 revision: str = "003"
 down_revision: Union[str, None] = "002"
@@ -31,7 +31,7 @@ def upgrade() -> None:
         sa.Column("scopes", ARRAY(sa.Text()), nullable=False, server_default="{}"),
         sa.Column(
             "status",
-            sa.Enum("active", "revoked", "expired", name="oauth_status", schema="core", create_type=False),
+            ENUM("active", "revoked", "expired", name="oauth_status", schema="core", create_type=False),
             nullable=False,
         ),
         sa.Column("encrypted_access_token", BYTEA(), nullable=True),
@@ -81,7 +81,7 @@ def upgrade() -> None:
         sa.Column("processed_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column(
             "processing_status",
-            sa.Enum("pending", "processed", "failed", name="processing_status", schema="core", create_type=False),
+            ENUM("pending", "processed", "failed", name="processing_status", schema="core", create_type=False),
             nullable=False,
             server_default="pending",
         ),

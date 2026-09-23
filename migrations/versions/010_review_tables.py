@@ -16,7 +16,7 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import ENUM, JSONB
 
 revision: str = "010"
 down_revision: Union[str, None] = "009"
@@ -35,7 +35,7 @@ def upgrade() -> None:
         sa.Column("operator_id", sa.Uuid(), sa.ForeignKey("core.operators.id"), nullable=False),
         sa.Column("thread_id", sa.Uuid(), sa.ForeignKey("vector_ctrl.threads.id"), nullable=True),
         sa.Column("mission_id", sa.Uuid(), sa.ForeignKey("vector_ctrl.missions.id"), nullable=True),
-        sa.Column("closure_type", sa.Enum("complete", "archive", "pause", "merge", name="closure_type", schema="core", create_type=False), nullable=False),
+        sa.Column("closure_type", ENUM("complete", "archive", "pause", "merge", name="closure_type", schema="core", create_type=False), nullable=False),
         sa.Column("outcome_summary", sa.Text(), nullable=True),
         sa.Column("lessons_learned", JSONB(), nullable=False, server_default="[]"),
         sa.Column("truth_revealed", sa.Text(), nullable=True),
@@ -65,7 +65,7 @@ def upgrade() -> None:
         "review_sessions",
         sa.Column("id", sa.Uuid(), primary_key=True),
         sa.Column("operator_id", sa.Uuid(), sa.ForeignKey("core.operators.id"), nullable=False),
-        sa.Column("review_scope", sa.Enum("micro", "daily", "weekly", "monthly", name="review_scope", schema="core", create_type=False), nullable=False),
+        sa.Column("review_scope", ENUM("micro", "daily", "weekly", "monthly", name="review_scope", schema="core", create_type=False), nullable=False),
         sa.Column("window_start", sa.DateTime(timezone=True), nullable=False),
         sa.Column("window_end", sa.DateTime(timezone=True), nullable=False),
         sa.Column("summary", sa.Text(), nullable=True),
