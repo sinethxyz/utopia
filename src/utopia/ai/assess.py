@@ -15,11 +15,6 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from utopia.ai import blocker_classifier, policy_selector, state_estimator
-from utopia.schemas.execution import (
-    BlockerEstimateCreate,
-    PolicyDecisionCreate,
-    StateEstimateCreate,
-)
 from utopia.services.evidence_service import EvidenceService
 from utopia.services.execution_service import ExecutionService
 
@@ -98,9 +93,9 @@ async def gather_evidence(
         evidence["derived_features"] = [
             {
                 "feature_name": f.feature_name,
-                "feature_value": str(f.feature_value) if f.feature_value else None,
+                "feature_value": str(f.feature_value) if f.feature_value is not None else None,
                 "feature_window": f.feature_window,
-                "confidence": str(f.confidence) if f.confidence else None,
+                "confidence": str(f.confidence) if f.confidence is not None else None,
             }
             for f in features
         ]

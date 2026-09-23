@@ -15,7 +15,7 @@ import uuid as _uuid
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from uuid_utils import uuid7
+from utopia.ids import new_uuid7
 
 from utopia.models.execution import (
     BlockerEstimate,
@@ -58,7 +58,7 @@ class ExecutionService:
         downstream policy selection.
         """
         estimate = StateEstimate(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             thread_id=data.thread_id,
             state_kind=data.state_kind,
@@ -96,7 +96,7 @@ class ExecutionService:
         blocker typing, the system recommends the wrong thing.
         """
         estimate = BlockerEstimate(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             thread_id=data.thread_id,
             blocker_kind=data.blocker_kind,
@@ -134,7 +134,7 @@ class ExecutionService:
         unresolved edge, smallest next move, trap to avoid.
         """
         artifact = ReentryArtifact(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             thread_id=data.thread_id,
             last_completed_step=data.last_completed_step,
@@ -193,7 +193,7 @@ class ExecutionService:
         AI Fabric exists, this can be created manually or by deterministic rules.
         """
         decision = PolicyDecision(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             thread_id=data.thread_id,
             problem_id=data.problem_id,
@@ -237,7 +237,7 @@ class ExecutionService:
         Model. Completes the chain: evidence -> inference -> policy -> outcome.
         """
         trace = Trace(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             thread_id=data.thread_id,
             policy_decision_id=data.policy_decision_id,

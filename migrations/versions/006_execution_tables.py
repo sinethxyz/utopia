@@ -18,7 +18,7 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import ENUM, JSONB
 
 revision: str = "006"
 down_revision: Union[str, None] = "005"
@@ -35,7 +35,7 @@ def upgrade() -> None:
         sa.Column("thread_id", sa.Uuid(), sa.ForeignKey("vector_ctrl.threads.id"), nullable=True),
         sa.Column(
             "state_kind",
-            sa.Enum(
+            ENUM(
                 "recover", "preserve", "orient", "clarify", "reenter",
                 "execute", "deep_work", "close_loop", "review", "drift",
                 name="state_kind", schema="core", create_type=False,
@@ -66,7 +66,7 @@ def upgrade() -> None:
         sa.Column("thread_id", sa.Uuid(), sa.ForeignKey("vector_ctrl.threads.id"), nullable=True),
         sa.Column(
             "blocker_kind",
-            sa.Enum(
+            ENUM(
                 "ambiguity", "scope_overload", "physiological_depletion",
                 "emotional_threat", "context_fracture", "vector_conflict",
                 "environmental_friction", "stimulation_hijack", "narrative_distortion",
@@ -138,7 +138,7 @@ def upgrade() -> None:
         sa.Column("blocker_estimate_id", sa.Uuid(), sa.ForeignKey("execution.blocker_estimates.id"), nullable=True),
         sa.Column(
             "mode",
-            sa.Enum(
+            ENUM(
                 "recover", "preserve", "orient", "reenter", "clarify",
                 "ask", "execute", "close_loop", "review",
                 name="intervention_kind", schema="core", create_type=False,
@@ -147,7 +147,7 @@ def upgrade() -> None:
         ),
         sa.Column(
             "intervention_kind",
-            sa.Enum(
+            ENUM(
                 "recover", "preserve", "orient", "reenter", "clarify",
                 "ask", "execute", "close_loop", "review",
                 name="intervention_kind", schema="core", create_type=False,
@@ -156,7 +156,7 @@ def upgrade() -> None:
         ),
         sa.Column(
             "action_depth",
-            sa.Enum(
+            ENUM(
                 "tiny", "narrow", "moderate", "deep",
                 name="action_depth", schema="core", create_type=False,
             ),
@@ -189,7 +189,7 @@ def upgrade() -> None:
         sa.Column("policy_decision_id", sa.Uuid(), sa.ForeignKey("execution.policy_decisions.id"), nullable=True),
         sa.Column(
             "trace_kind",
-            sa.Enum(
+            ENUM(
                 "action", "question", "preserve", "recovery", "closure",
                 name="trace_kind", schema="core", create_type=False,
             ),

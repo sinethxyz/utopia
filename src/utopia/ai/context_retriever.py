@@ -65,7 +65,7 @@ async def retrieve_context(
     vector_search_svc: VectorSearchService,
     query: str,
     *,
-    operator_id: uuid.UUID | None = None,
+    operator_id: uuid.UUID,
     entity_kinds: list[str] | None = None,
     top_k: int = 10,
     synthesize: bool = True,
@@ -75,7 +75,7 @@ async def retrieve_context(
     Args:
         vector_search_svc: The vector search service for semantic retrieval.
         query: Natural language query to search for.
-        operator_id: Optional filter by operator.
+        operator_id: Operator whose memory may be retrieved.
         entity_kinds: Optional filter to specific Aether entity types.
         top_k: Number of raw results to retrieve.
         synthesize: Whether to run Claude synthesis on results (set False for raw search).

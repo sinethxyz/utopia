@@ -12,7 +12,7 @@ import uuid as _uuid
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from uuid_utils import uuid7
+from utopia.ids import new_uuid7
 
 from utopia.enums import ReviewScope
 from utopia.models.review import (
@@ -50,7 +50,7 @@ class ReviewService:
 
     async def create_closure(self, data: ClosureCreate) -> Closure:
         closure = Closure(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             thread_id=data.thread_id,
             mission_id=data.mission_id,
@@ -95,7 +95,7 @@ class ReviewService:
         self, data: ReviewSessionCreate
     ) -> ReviewSession:
         session = ReviewSession(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             review_scope=data.review_scope,
             window_start=data.window_start,
@@ -138,7 +138,7 @@ class ReviewService:
         self, data: RulePromotionCreate
     ) -> RulePromotion:
         promotion = RulePromotion(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             review_session_id=data.review_session_id,
             rule_id=data.rule_id,
@@ -174,7 +174,7 @@ class ReviewService:
         self, data: PatternUpdateCreate
     ) -> PatternUpdate:
         update = PatternUpdate(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             review_session_id=data.review_session_id,
             pattern_id=data.pattern_id,
@@ -212,7 +212,7 @@ class ReviewService:
         self, data: CalibrationRecordCreate
     ) -> CalibrationRecord:
         record = CalibrationRecord(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             review_session_id=data.review_session_id,
             estimate_kind=data.estimate_kind,

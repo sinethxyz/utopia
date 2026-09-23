@@ -13,7 +13,7 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy.dialects.postgresql import ARRAY, JSONB
+from sqlalchemy.dialects.postgresql import ARRAY, ENUM, JSONB
 
 revision: str = "004"
 down_revision: Union[str, None] = "003"
@@ -31,7 +31,7 @@ def upgrade() -> None:
         sa.Column("description", sa.Text(), nullable=True),
         sa.Column(
             "status",
-            sa.Enum("active", "paused", "completed", "abandoned", "archived", "dormant",
+            ENUM("active", "paused", "completed", "abandoned", "archived", "dormant",
                     name="status", schema="core", create_type=False),
             nullable=False,
         ),
@@ -61,7 +61,7 @@ def upgrade() -> None:
         sa.Column("priority_stack", JSONB(), nullable=False, server_default="[]"),
         sa.Column(
             "status",
-            sa.Enum("planned", "active", "closed",
+            ENUM("planned", "active", "closed",
                     name="season_status", schema="core", create_type=False),
             nullable=False,
         ),
@@ -84,14 +84,14 @@ def upgrade() -> None:
         sa.Column("description", sa.Text(), nullable=True),
         sa.Column(
             "mission_kind",
-            sa.Enum("strategic", "technical", "personal", "recovery", "exploratory",
+            ENUM("strategic", "technical", "personal", "recovery", "exploratory",
                     name="mission_kind", schema="core", create_type=False),
             nullable=False,
         ),
         sa.Column("priority_score", sa.Numeric(6, 3), nullable=True),
         sa.Column(
             "status",
-            sa.Enum("active", "paused", "completed", "abandoned", "archived", "dormant",
+            ENUM("active", "paused", "completed", "abandoned", "archived", "dormant",
                     name="status", schema="core", create_type=False),
             nullable=False,
         ),
@@ -122,13 +122,13 @@ def upgrade() -> None:
         sa.Column("description", sa.Text(), nullable=True),
         sa.Column(
             "thread_kind",
-            sa.Enum("build", "research", "decision", "admin", "recovery",
+            ENUM("build", "research", "decision", "admin", "recovery",
                     name="thread_kind", schema="core", create_type=False),
             nullable=False,
         ),
         sa.Column(
             "status",
-            sa.Enum("active", "blocked", "paused", "closed",
+            ENUM("active", "blocked", "paused", "closed",
                     name="thread_status", schema="core", create_type=False),
             nullable=False,
         ),
@@ -163,7 +163,7 @@ def upgrade() -> None:
         sa.Column("description", sa.Text(), nullable=False),
         sa.Column(
             "hardness",
-            sa.Enum("hard", "soft", "assumed",
+            ENUM("hard", "soft", "assumed",
                     name="constraint_hardness", schema="core", create_type=False),
             nullable=False,
         ),

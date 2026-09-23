@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import json
 import uuid
-from unittest.mock import AsyncMock, patch
 
 import pytest
 
@@ -37,7 +36,11 @@ class TestHealth:
     async def test_health(self, client):
         resp = await client.get("/health")
         assert resp.status_code == 200
-        assert resp.json() == {"status": "ok"}
+        assert resp.json() == {
+            "status": "ok",
+            "system": "neurocognitive-system",
+            "historical_codename": "utopia",
+        }
 
 
 # ---------------------------------------------------------------------------
@@ -327,3 +330,48 @@ class TestAIRoutes:
         data = resp.json()
         assert len(data["perspectives"]) == 4
         assert data["decision_readiness"] == "defer"
+
+
+# ---------------------------------------------------------------------------
+# Nested resource integrity
+# ---------------------------------------------------------------------------
+
+class TestNestedResourceIntegrity:
+
+    @pytest.mark.asyncio
+    async def test_aether_source_path_must_match_body(self, client):
+        path_id = uuid.uuid4()
+        body_id = uuid.uuid4()
+        resp = await client.post(
+            f"/aether/sources/{path_id}/chunks",
+            json={
+                "source_id": str(body_id),
+                "chunk_index": 0,
+                "raw_text": "test",
+            },
+        )
+        assert resp.status_code == 422
+
+    @pytest.mark.asyncio
+    async def test_reasoning_problem_path_must_match_body(self, client):
+        path_id = uuid.uuid4()
+        body_id = uuid.uuid4()
+        resp = await client.post(
+            f"/reasoning/problems/{path_id}/structure",
+            json={"problem_id": str(body_id)},
+        )
+        assert resp.status_code == 422
+
+    @pytest.mark.asyncio
+    async def test_review_session_path_must_match_body(self, client):
+        path_id = uuid.uuid4()
+        body_id = uuid.uuid4()
+        resp = await client.post(
+            f"/review/sessions/{path_id}/rule-promotions",
+            json={
+                "operator_id": str(uuid.uuid4()),
+                "review_session_id": str(body_id),
+                "rule_id": str(uuid.uuid4()),
+            },
+        )
+        assert resp.status_code == 422

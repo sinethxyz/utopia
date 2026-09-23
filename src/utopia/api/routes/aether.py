@@ -75,6 +75,8 @@ async def add_source_chunk(
     data: SourceChunkCreate,
     svc: AetherService = Depends(get_aether_service),
 ) -> SourceChunkRead:
+    if data.source_id != source_id:
+        raise HTTPException(status_code=422, detail="source_id must match the path")
     chunk = await svc.add_source_chunk(data)
     await svc.commit()
     return SourceChunkRead.model_validate(chunk)
@@ -86,6 +88,8 @@ async def record_extraction(
     data: ExtractionCreate,
     svc: AetherService = Depends(get_aether_service),
 ) -> ExtractionRead:
+    if data.source_id != source_id:
+        raise HTTPException(status_code=422, detail="source_id must match the path")
     extraction = await svc.record_extraction(data)
     await svc.commit()
     return ExtractionRead.model_validate(extraction)
@@ -229,6 +233,8 @@ async def add_lens_pack_item(
     data: LensPackItemCreate,
     svc: AetherService = Depends(get_aether_service),
 ) -> LensPackItemRead:
+    if data.lens_pack_id != lens_pack_id:
+        raise HTTPException(status_code=422, detail="lens_pack_id must match the path")
     item = await svc.add_lens_pack_item(data)
     await svc.commit()
     return LensPackItemRead.model_validate(item)

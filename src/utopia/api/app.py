@@ -1,7 +1,4 @@
-"""Utopia FastAPI application.
-
-Minimal bootstrap — routes added per bounded context as they are built.
-"""
+"""Historical Neurocognitive System (Utopia) FastAPI application."""
 
 from fastapi import FastAPI
 
@@ -17,8 +14,11 @@ from utopia.api.routes.vector import router as vector_router
 from utopia.api.routes.vector_search import router as vector_search_router
 
 app = FastAPI(
-    title="Utopia",
-    description="Private cognitive operating system and judgment refinery",
+    title="Neurocognitive System",
+    description=(
+        "Historical Utopia prototype: multimodal cognitive-state, continuity, "
+        "reasoning, and adaptive-control architecture. Not production hardened."
+    ),
     version="0.1.0",
 )
 
@@ -36,4 +36,8 @@ app.include_router(vector_search_router)
 
 @app.get("/health")
 async def health() -> dict:
-    return {"status": "ok"}
+    return {
+        "status": "ok",
+        "system": "neurocognitive-system",
+        "historical_codename": "utopia",
+    }

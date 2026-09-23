@@ -8,8 +8,14 @@ build/
 .venv/
 venv/
 .env
+.env.*
+!.env.example
 *.db
 *.sqlite3
+*.log
+*.dump
+*.sql
+*.parquet
 .ruff_cache/
 .pytest_cache/
 .mypy_cache/

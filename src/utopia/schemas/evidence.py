@@ -32,7 +32,9 @@ class SubjectiveCheckinCreate(BaseModel):
     emotional_load: int | None = Field(None, ge=0, le=100)
     perceived_urgency: int | None = Field(None, ge=0, le=100)
     free_text: str | None = None
-    recorded_at: datetime.datetime
+    recorded_at: datetime.datetime = Field(
+        default_factory=lambda: datetime.datetime.now(datetime.timezone.utc)
+    )
 
 
 class SubjectiveCheckinRead(BaseModel):
@@ -136,7 +138,9 @@ class DerivedFeatureCreate(BaseModel):
     feature_json: dict | None = None
     feature_window: str | None = None
     confidence: Decimal | None = Field(None, ge=0, le=1)
-    observed_at: datetime.datetime
+    observed_at: datetime.datetime = Field(
+        default_factory=lambda: datetime.datetime.now(datetime.timezone.utc)
+    )
 
 
 class DerivedFeatureRead(BaseModel):
