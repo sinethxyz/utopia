@@ -1,6 +1,6 @@
 # Public release readiness
 
-**Status:** Ready except owner decisions.
+**Status:** Ready except remaining owner release actions.
 
 This status refers to **public preservation / portfolio release**, not production deployment.
 
@@ -10,6 +10,10 @@ The final public state is represented by:
 - **PR #5** — `Neurocognitive System v0.3 public release polish`, stacked on PR #4
 
 Neither PR is merged by this cleanup.
+
+## License
+
+Apache License 2.0 is selected for the public repository. The root `LICENSE` file contains the standard Apache-2.0 terms, the README links to it, and Python project metadata references that license file.
 
 ## Verification gates
 
@@ -119,9 +123,8 @@ The connected GitHub capability used for this cleanup can modify repository file
 
 ## Owner decisions remaining
 
-1. **License** — choose MIT, Apache-2.0, or intentionally keep the repository public/source-visible without an open-source license.
-2. **Merge** — decide whether/when to merge PR #4, then PR #5 (or retarget #5 after #4 merges).
-3. **Historical tag/release** — decide whether to create `historical-utopia-v0.1` at the selected historical Utopia reference point.
+1. **Merge** — decide whether/when to merge PR #4, then PR #5 (or retarget #5 after #4 merges).
+2. **Historical tag/release** — decide whether to create `historical-utopia-v0.1` at the selected historical Utopia reference point.
 
 No other architectural/product decision is required for public preservation.
 
