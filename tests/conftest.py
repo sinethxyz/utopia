@@ -12,21 +12,25 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 from httpx import ASGITransport, AsyncClient
+from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from utopia.api.app import app
 from utopia.api.deps import get_db
 from utopia.config import settings
-from utopia.db import Base
 
 # ---------------------------------------------------------------------------
 # Database fixtures
 # ---------------------------------------------------------------------------
 
-# Use the same database URL but with a test-aware approach:
-# In CI, point DATABASE_URL to a test database.
-# Locally, this uses the configured database.
 TEST_DATABASE_URL = settings.database_url
+TEST_DATABASE_NAME = make_url(TEST_DATABASE_URL).database or ""
+
+if not TEST_DATABASE_NAME.endswith("_test"):
+    raise RuntimeError(
+        "Refusing to run tests unless DATABASE_URL names a database ending in '_test'. "
+        "Set DATABASE_URL and DATABASE_URL_SYNC to an isolated test database."
+    )
 
 
 @pytest.fixture(scope="session")
