@@ -13,7 +13,7 @@ import uuid as _uuid
 from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
-from uuid_utils import uuid7
+from utopia.ids import new_uuid7
 
 from utopia.models.aether import (
     Case,
@@ -72,7 +72,7 @@ class AetherService:
 
     async def ingest_source(self, data: SourceCreate) -> Source:
         source = Source(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             source_kind=data.source_kind,
             title=data.title,
@@ -93,7 +93,7 @@ class AetherService:
 
     async def add_source_chunk(self, data: SourceChunkCreate) -> SourceChunk:
         chunk = SourceChunk(
-            id=uuid7(),
+            id=new_uuid7(),
             source_id=data.source_id,
             chunk_index=data.chunk_index,
             raw_text=data.raw_text,
@@ -110,7 +110,7 @@ class AetherService:
         stmt = (
             pg_insert(Extraction)
             .values(
-                id=uuid7(),
+                id=new_uuid7(),
                 source_id=data.source_id,
                 extraction_version=data.extraction_version,
                 extraction_status=data.extraction_status,
@@ -146,7 +146,7 @@ class AetherService:
         stmt = (
             pg_insert(Concept)
             .values(
-                id=uuid7(),
+                id=new_uuid7(),
                 operator_id=data.operator_id,
                 canonical_name=data.canonical_name,
                 definition=data.definition,
@@ -182,7 +182,7 @@ class AetherService:
 
     async def create_mechanism(self, data: MechanismCreate) -> Mechanism:
         mechanism = Mechanism(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             name=data.name,
             description=data.description,
@@ -196,7 +196,7 @@ class AetherService:
 
     async def create_tradeoff(self, data: TradeoffCreate) -> Tradeoff:
         tradeoff = Tradeoff(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             name=data.name,
             pole_a=data.pole_a,
@@ -210,7 +210,7 @@ class AetherService:
 
     async def create_failure_mode(self, data: FailureModeCreate) -> FailureMode:
         failure_mode = FailureMode(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             name=data.name,
             description=data.description,
@@ -224,7 +224,7 @@ class AetherService:
 
     async def create_heuristic(self, data: HeuristicCreate) -> Heuristic:
         heuristic = Heuristic(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             statement=data.statement,
             domain=data.domain,
@@ -240,7 +240,7 @@ class AetherService:
         self, data: DiagnosticQuestionCreate
     ) -> DiagnosticQuestion:
         question = DiagnosticQuestion(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             question_text=data.question_text,
             question_class=data.question_class,
@@ -253,7 +253,7 @@ class AetherService:
 
     async def create_protocol(self, data: ProtocolCreate) -> Protocol:
         protocol = Protocol(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             protocol_name=data.protocol_name,
             domain=data.domain,
@@ -271,7 +271,7 @@ class AetherService:
 
     async def create_lens_pack(self, data: LensPackCreate) -> LensPack:
         pack = LensPack(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             name=data.name,
             domain=data.domain,
@@ -288,7 +288,7 @@ class AetherService:
 
     async def add_lens_pack_item(self, data: LensPackItemCreate) -> LensPackItem:
         item = LensPackItem(
-            id=uuid7(),
+            id=new_uuid7(),
             lens_pack_id=data.lens_pack_id,
             item_kind=data.item_kind,
             item_id=data.item_id,
@@ -315,7 +315,7 @@ class AetherService:
 
     async def create_case(self, data: CaseCreate) -> Case:
         case = Case(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             title=data.title,
             case_kind=data.case_kind,
@@ -333,7 +333,7 @@ class AetherService:
 
     async def create_rule(self, data: RuleCreate) -> Rule:
         rule = Rule(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             rule_text=data.rule_text,
             rule_kind=data.rule_kind,
@@ -381,7 +381,7 @@ class AetherService:
 
     async def create_pattern(self, data: PatternCreate) -> Pattern:
         pattern = Pattern(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             pattern_name=data.pattern_name,
             description=data.description,
@@ -420,7 +420,7 @@ class AetherService:
 
     async def create_edge(self, data: EdgeCreate) -> Edge:
         edge = Edge(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             src_kind=data.src_kind,
             dst_kind=data.dst_kind,
