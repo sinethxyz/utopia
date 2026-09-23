@@ -43,3 +43,9 @@ Raw neurophysiological data should not automatically be forwarded to external mo
 This project is not a medical diagnostic system.
 
 Physiological and neurophysiological signals should be treated as imperfect evidence about operational state, not as diagnostic truth.
+
+## Public-release audit
+
+The preservation pass records current-tree and reachable-history secret scanning, safe-default changes, and explicit limitations in [docs/audit/public-release-2026-09-23.md](docs/audit/public-release-2026-09-23.md).
+
+Remaining deployment-critical security work is tracked in [docs/technical-debt.md](docs/technical-debt.md).
