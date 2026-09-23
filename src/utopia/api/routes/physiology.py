@@ -59,6 +59,10 @@ async def sync_whoop(
 
     Fetches cycles, sleeps, recoveries, workouts, and body measurements
     from the WHOOP API and persists them through the PhysiologyService.
+
+    Historical behavior: the caller supplies an access token directly.
+    This endpoint is not evidence of a complete OAuth lifecycle and should
+    not be exposed to an untrusted network.
     """
     from utopia.integrations.whoop.client import WhoopClient
     from utopia.integrations.whoop.sync import sync_whoop_data
