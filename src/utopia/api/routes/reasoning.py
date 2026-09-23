@@ -68,6 +68,8 @@ async def create_problem_structure(
     data: ProblemStructureCreate,
     svc: ReasoningService = Depends(get_reasoning_service),
 ) -> ProblemStructureRead:
+    if data.problem_id != problem_id:
+        raise HTTPException(status_code=422, detail="problem_id must match the path")
     structure = await svc.create_problem_structure(data)
     await svc.commit()
     return ProblemStructureRead.model_validate(structure)
@@ -94,6 +96,8 @@ async def create_interrogation(
     data: InterrogationCreate,
     svc: ReasoningService = Depends(get_reasoning_service),
 ) -> InterrogationRead:
+    if data.problem_id != problem_id:
+        raise HTTPException(status_code=422, detail="problem_id must match the path")
     interrogation = await svc.create_interrogation(data)
     await svc.commit()
     return InterrogationRead.model_validate(interrogation)
@@ -118,6 +122,8 @@ async def create_decision_brief(
     data: DecisionBriefCreate,
     svc: ReasoningService = Depends(get_reasoning_service),
 ) -> DecisionBriefRead:
+    if data.problem_id != problem_id:
+        raise HTTPException(status_code=422, detail="problem_id must match the path")
     brief = await svc.create_decision_brief(data)
     await svc.commit()
     return DecisionBriefRead.model_validate(brief)
@@ -144,6 +150,8 @@ async def add_option_path(
     data: OptionPathCreate,
     svc: ReasoningService = Depends(get_reasoning_service),
 ) -> OptionPathRead:
+    if data.decision_brief_id != brief_id:
+        raise HTTPException(status_code=422, detail="decision_brief_id must match the path")
     option = await svc.add_option_path(data)
     await svc.commit()
     return OptionPathRead.model_validate(option)
