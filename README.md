@@ -48,7 +48,7 @@ The historical implementation includes:
 - FastAPI
 - PostgreSQL 16 + pgvector
 - SQLAlchemy + Alembic
-- 13 database migrations
+- 13 historical database migrations + 1 cleanup migration
 - typed ORM and Pydantic models
 - directional hierarchy: life arcs → seasons → missions → threads
 - subjective, behavioral, contextual, and derived evidence
@@ -274,7 +274,7 @@ src/utopia/
   ai/                  # historical reasoning runtime
 
 migrations/
-  versions/            # 13 historical migrations
+  versions/            # historical migrations + cleanup migrations
 
 docs/
   architecture/        # cleaned architecture
