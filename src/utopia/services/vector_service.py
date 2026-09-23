@@ -14,7 +14,7 @@ import uuid as _uuid
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from uuid_utils import uuid7
+from utopia.ids import new_uuid7
 
 from utopia.models.vector_ctrl import (
     AntiGoal,
@@ -53,7 +53,7 @@ class VectorService:
 
     async def create_life_arc(self, data: LifeArcCreate) -> LifeArc:
         arc = LifeArc(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             title=data.title,
             description=data.description,
@@ -76,7 +76,7 @@ class VectorService:
 
     async def create_season(self, data: SeasonCreate) -> Season:
         season = Season(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             life_arc_id=data.life_arc_id,
             title=data.title,
@@ -105,7 +105,7 @@ class VectorService:
         are the fields that give Vector its governance power.
         """
         mission = Mission(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             season_id=data.season_id,
             title=data.title,
@@ -146,7 +146,7 @@ class VectorService:
         Blocker Classifier, Schrodinger — use for policy selection.
         """
         thread = Thread(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             mission_id=data.mission_id,
             parent_thread_id=data.parent_thread_id,
@@ -184,7 +184,7 @@ class VectorService:
 
     async def add_thread_constraint(self, data: ThreadConstraintCreate) -> ThreadConstraint:
         constraint = ThreadConstraint(
-            id=uuid7(),
+            id=new_uuid7(),
             thread_id=data.thread_id,
             constraint_type=data.constraint_type,
             description=data.description,
@@ -205,7 +205,7 @@ class VectorService:
         to detect drift and block misaligned action proposals.
         """
         anti_goal = AntiGoal(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             scope_type=data.scope_type,
             scope_id=data.scope_id,
