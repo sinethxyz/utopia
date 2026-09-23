@@ -67,6 +67,41 @@ jobs:
       - name: Ruff
         run: ruff check --select E4,E7,E9,F src tests migrations/env.py migrations/versions/014_operator_scoped_embeddings.py
 
+      - name: Check relative documentation links
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          roots = [
+              Path("README.md"),
+              Path("SECURITY.md"),
+              *Path("docs/architecture").glob("*.md"),
+              *Path("docs/rfcs").glob("*.md"),
+              *Path("docs/audit").glob("*.md"),
+              Path("docs/technical-debt.md"),
+              Path("docs/history/README.md"),
+              Path("docs/history/terminology.md"),
+              Path("docs/history/provenance.md"),
+          ]
+
+          missing = []
+          for document in roots:
+              text = document.read_text(encoding="utf-8")
+              for target in re.findall(r"\[[^\]]+\]\(([^)]+)\)", text):
+                  if target.startswith(("http://", "https://", "mailto:", "#")):
+                      continue
+                  file_target = target.split("#", 1)[0]
+                  if not file_target:
+                      continue
+                  resolved = (document.parent / file_target).resolve()
+                  if not resolved.exists():
+                      missing.append(f"{document}: {target}")
+
+          if missing:
+              raise SystemExit("Broken relative documentation links:\n" + "\n".join(missing))
+          PY
+
       - name: Apply migrations from zero
         run: alembic upgrade head
 
