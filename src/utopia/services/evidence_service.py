@@ -10,7 +10,7 @@ import uuid as _uuid
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from uuid_utils import uuid7
+from utopia.ids import new_uuid7
 
 from utopia.models.evidence import (
     BehaviorEvent,
@@ -50,7 +50,7 @@ class EvidenceService:
         is meaningful evidence for the State Estimator.
         """
         checkin = SubjectiveCheckin(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             thread_id=data.thread_id,
             energy=data.energy,
@@ -98,7 +98,7 @@ class EvidenceService:
         aversion. The Blocker Classifier consumes these.
         """
         event = BehaviorEvent(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             thread_id=data.thread_id,
             event_type=data.event_type,
@@ -142,7 +142,7 @@ class EvidenceService:
         the context it needs to weight feasibility of action depth.
         """
         snapshot = ContextSnapshot(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             thread_id=data.thread_id,
             local_time=data.local_time,
@@ -182,7 +182,7 @@ class EvidenceService:
         thread_decay_hours, drift_probability, completion_aversion_score.
         """
         feature = DerivedFeature(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             thread_id=data.thread_id,
             feature_name=data.feature_name,
