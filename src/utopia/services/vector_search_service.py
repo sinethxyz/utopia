@@ -79,6 +79,7 @@ class VectorSearchService:
         # Check for existing embedding with same hash
         stmt = (
             select(Embedding)
+            .where(Embedding.operator_id == operator_id)
             .where(Embedding.entity_kind == entity_kind)
             .where(Embedding.entity_id == entity_id)
         )
@@ -137,6 +138,7 @@ class VectorSearchService:
             content_hash = _hash_content(entity["content_text"])
             stmt = (
                 select(Embedding)
+                .where(Embedding.operator_id == operator_id)
                 .where(Embedding.entity_kind == entity["entity_kind"])
                 .where(Embedding.entity_id == entity["entity_id"])
             )
@@ -187,11 +189,12 @@ class VectorSearchService:
         return results
 
     async def delete_embedding(
-        self, entity_kind: str, entity_id: _uuid.UUID
+        self, operator_id: _uuid.UUID, entity_kind: str, entity_id: _uuid.UUID
     ) -> None:
-        """Delete an embedding for an entity."""
+        """Delete an embedding owned by an operator."""
         stmt = (
             delete(Embedding)
+            .where(Embedding.operator_id == operator_id)
             .where(Embedding.entity_kind == entity_kind)
             .where(Embedding.entity_id == entity_id)
         )
@@ -205,7 +208,7 @@ class VectorSearchService:
         self,
         query: str,
         *,
-        operator_id: _uuid.UUID | None = None,
+        operator_id: _uuid.UUID,
         entity_kinds: list[str] | None = None,
         top_k: int = 10,
     ) -> list[SearchResult]:
@@ -213,7 +216,7 @@ class VectorSearchService:
 
         Args:
             query: The natural language search query.
-            operator_id: Optional filter by operator.
+            operator_id: Operator that owns the searchable memory.
             entity_kinds: Optional filter to specific entity types.
             top_k: Number of results to return.
 
@@ -226,12 +229,8 @@ class VectorSearchService:
         # 1 - cosine_distance = cosine_similarity
         vector_literal = f"[{','.join(str(v) for v in query_vector)}]"
 
-        filters = []
-        params: dict = {"top_k": top_k}
-
-        if operator_id is not None:
-            filters.append("operator_id = :operator_id")
-            params["operator_id"] = str(operator_id)
+        filters = ["operator_id = :operator_id"]
+        params: dict = {"top_k": top_k, "operator_id": str(operator_id)}
 
         if entity_kinds:
             placeholders = ", ".join(f":ek_{i}" for i in range(len(entity_kinds)))
@@ -268,6 +267,7 @@ class VectorSearchService:
 
     async def find_similar(
         self,
+        operator_id: _uuid.UUID,
         entity_kind: str,
         entity_id: _uuid.UUID,
         *,
@@ -281,6 +281,7 @@ class VectorSearchService:
         # Get the entity's embedding
         stmt = (
             select(Embedding)
+            .where(Embedding.operator_id == operator_id)
             .where(Embedding.entity_kind == entity_kind)
             .where(Embedding.entity_id == entity_id)
         )
@@ -299,14 +300,20 @@ class VectorSearchService:
                 content_text,
                 1 - (embedding <=> '{vector_literal}'::vector) AS similarity
             FROM vector.embeddings
-            WHERE NOT (entity_kind = :src_kind AND entity_id = :src_id)
+            WHERE operator_id = :operator_id
+              AND NOT (entity_kind = :src_kind AND entity_id = :src_id)
             ORDER BY embedding <=> '{vector_literal}'::vector
             LIMIT :top_k
         """
 
         result = await self._session.execute(
             text(sql),
-            {"src_kind": entity_kind, "src_id": str(entity_id), "top_k": top_k},
+            {
+                "operator_id": str(operator_id),
+                "src_kind": entity_kind,
+                "src_id": str(entity_id),
+                "top_k": top_k,
+            },
         )
         rows = result.fetchall()
 
