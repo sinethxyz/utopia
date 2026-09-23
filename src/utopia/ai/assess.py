@@ -98,9 +98,9 @@ async def gather_evidence(
         evidence["derived_features"] = [
             {
                 "feature_name": f.feature_name,
-                "feature_value": str(f.feature_value) if f.feature_value else None,
+                "feature_value": str(f.feature_value) if f.feature_value is not None else None,
                 "feature_window": f.feature_window,
-                "confidence": str(f.confidence) if f.confidence else None,
+                "confidence": str(f.confidence) if f.confidence is not None else None,
             }
             for f in features
         ]
