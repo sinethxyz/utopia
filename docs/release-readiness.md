@@ -85,9 +85,9 @@ Automatic calibration learning, complete OAuth lifecycle, complete automatic aud
 
 ## Provenance
 
-The verified pre-cleanup reference point is:
+The selected historical Utopia reference point is:
 
-`1b2b5dba817610711a38aea382fe563413ee6dab`
+`656c32b70cfac7a5ad7b94bb31451425fb6139bf`
 
 The proposed tag is:
 
@@ -121,7 +121,7 @@ The connected GitHub capability used for this cleanup can modify repository file
 
 1. **License** — choose MIT, Apache-2.0, or intentionally keep the repository public/source-visible without an open-source license.
 2. **Merge** — decide whether/when to merge PR #4, then PR #5 (or retarget #5 after #4 merges).
-3. **Historical tag/release** — decide whether to create `historical-utopia-v0.1` at the exact pre-cleanup commit.
+3. **Historical tag/release** — decide whether to create `historical-utopia-v0.1` at the selected historical Utopia reference point.
 
 No other architectural/product decision is required for public preservation.
 
