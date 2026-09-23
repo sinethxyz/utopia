@@ -351,3 +351,101 @@ class TestReasoningService:
 
         reports = await reasoning_service.list_contradictions(operator_id)
         assert len(reports) >= 1
+
+
+# ---------------------------------------------------------------------------
+# Cleanup regression coverage
+# ---------------------------------------------------------------------------
+
+class TestCleanupRegressions:
+    """Regression tests for public-release correctness fixes."""
+
+    @pytest.mark.asyncio
+    async def test_zero_valued_derived_evidence_is_preserved(
+        self, db_session, evidence_service, operator_id
+    ):
+        from utopia.ai.assess import gather_evidence
+
+        await _insert_operator(db_session, operator_id)
+        await evidence_service.store_derived_feature(
+            DerivedFeatureCreate(
+                operator_id=operator_id,
+                feature_name="zero_signal",
+                feature_value=Decimal("0"),
+                confidence=Decimal("0"),
+            )
+        )
+
+        evidence = await gather_evidence(evidence_service, operator_id)
+        feature = evidence["derived_features"][0]
+
+        assert Decimal(feature["feature_value"]) == 0
+        assert Decimal(feature["confidence"]) == 0
+
+    @pytest.mark.asyncio
+    async def test_vector_retrieval_is_operator_scoped(
+        self,
+        db_session,
+        vector_search_service,
+        mock_embeddings,
+        operator_id,
+    ):
+        other_operator_id = uuid.uuid4()
+        shared_entity_id = uuid.uuid4()
+
+        await _insert_operator(db_session, operator_id)
+        await _insert_operator(db_session, other_operator_id)
+
+        await vector_search_service.embed_entity(
+            operator_id,
+            "concept",
+            shared_entity_id,
+            "operator one memory",
+        )
+        await vector_search_service.embed_entity(
+            other_operator_id,
+            "concept",
+            shared_entity_id,
+            "operator two memory",
+        )
+
+        own_results = await vector_search_service.search(
+            "memory",
+            operator_id=operator_id,
+            top_k=10,
+        )
+
+        assert [result.content_text for result in own_results] == ["operator one memory"]
+
+    @pytest.mark.asyncio
+    async def test_find_similar_is_operator_scoped(
+        self,
+        db_session,
+        vector_search_service,
+        mock_embeddings,
+        operator_id,
+    ):
+        other_operator_id = uuid.uuid4()
+        source_id = uuid.uuid4()
+
+        await _insert_operator(db_session, operator_id)
+        await _insert_operator(db_session, other_operator_id)
+
+        await vector_search_service.embed_entity(
+            operator_id, "concept", source_id, "source memory"
+        )
+        await vector_search_service.embed_entity(
+            operator_id, "concept", uuid.uuid4(), "same operator neighbor"
+        )
+        await vector_search_service.embed_entity(
+            other_operator_id, "concept", uuid.uuid4(), "other operator neighbor"
+        )
+
+        results = await vector_search_service.find_similar(
+            operator_id,
+            "concept",
+            source_id,
+            top_k=10,
+        )
+
+        assert [result.content_text for result in results] == ["same operator neighbor"]
