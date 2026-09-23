@@ -173,7 +173,7 @@ async def structure_problem(
 
 class RetrieveRequest(BaseModel):
     query: str
-    operator_id: uuid.UUID | None = None
+    operator_id: uuid.UUID
     entity_kinds: list[str] | None = None
     top_k: int = 10
     synthesize: bool = True
