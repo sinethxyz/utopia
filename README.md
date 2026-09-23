@@ -1,332 +1,420 @@
-# Utopia
+# Neurocognitive System
 
-Utopia is a private cognitive operating system and judgment refinery.
+> **Historical codename: Utopia**  
+> **Status: historical / inactive / preserved**
 
-It is designed for one hard problem:
+Neurocognitive System was an experimental, backend-first architecture for state-aware cognitive control.
 
-**continuity failure under state variability**
+It was built around one assumption:
 
-Most productivity systems assume a stable operator.
-Utopia does not.
+**the operator is not stable.**
 
-It assumes attention is non linear, energy changes, context fractures, motivation is unstable, and self interpretation is often distorted by present state.
+Attention changes. Energy changes. Context disappears. Re-entry has a cost. Present-state narratives can be wrong. A system that assumes a permanently consistent operator will eventually recommend the wrong thing at the wrong depth.
 
-The system is being built as a backend first architecture that preserves continuity across time, captures evidence about the operator's condition, estimates what is actually happening, and produces the smallest correct next move.
+The experiment asked whether software could preserve continuity by maintaining explicit models of direction, evidence, state, blockers, policy, action, outcome, and calibration.
 
-## Core idea
+Its central loop was:
 
-Utopia is not a task manager.
+```text
+Direction
+   ↓
+Evidence
+   ↓
+State + Blocker Estimate
+   ↓
+Policy
+   ↓
+Action / Re-entry
+   ↓
+Trace
+   ↓
+Review / Calibration
+   ↺
+```
 
-It is a state aware system that tries to answer questions like:
+The project is no longer actively developed as a product.
 
-- What state is the operator in right now
-- What is actually blocking motion
-- What thread matters
-- What is the smallest correct move
-- How do we preserve re entry across interruptions
-- What did reality reveal after action
+It remains public because several architectural ideas explored here continued to recur in later systems.
 
-The architecture is split into bounded contexts that map to different layers of cognition and control.
+**The implementation is historical. The questions were not.**
 
-## Current status
+---
 
-### Foundation
+## The problem
+
+Most productivity software assumes a relatively stable operator.
+
+If the correct task is visible, the user can execute it.
+
+If context is lost, they can reload it.
+
+If they stop moving, the problem is assumed to be motivation, planning, or discipline.
+
+This system explored a different model.
+
+The failure may be one of continuity.
+
+The operator may still know what matters in the abstract while temporarily losing access to the context, state, energy, or cognitive depth required to act on it.
+
+That produces a different set of questions:
+
+- What direction actually matters right now?
+- What evidence describes the operator's current condition?
+- What state is the operator in?
+- What is actually blocking motion?
+- What action depth is appropriate for that state?
+- What is the smallest correct next move?
+- How can interrupted work be re-entered without reconstructing everything?
+- What did reality reveal after the action?
+- Was the system's previous estimate actually correct?
+
+The goal was not to maximize visible activity.
+
+The goal was to preserve direction and choose the smallest defensible move given the available evidence.
+
+---
+
+## Not a task manager
+
+Neurocognitive System was not designed as a conventional productivity application.
+
+It was not primarily:
+
+- a to-do list
+- a note-taking system
+- a mood tracker
+- a habit app
+- a diary
+- a generic second brain
+- a chatbot over personal data
+
+The architecture treated cognition and execution as a control problem.
+
+A recommendation was not supposed to be the end of the loop.
+
+It was a **claim** about what the operator should do next.
+
+That claim could later be compared with the outcome.
+
+```text
+observation → inference → intervention → outcome → calibration
+```
+
+That feedback loop is the important part.
+
+---
+
+## Architecture
+
+The repository separates the system into bounded contexts rather than storing everything inside generic notes or chat history.
+
+### Vector
+
+Directional control.
+
+Vector models what matters across different horizons:
+
+```text
+life arc → season → mission → thread
+```
+
+It exists to prevent motion from being mistaken for progress.
+
+### Evidence
+
+The sensing layer.
+
+It captures subjective, behavioral, contextual, and derived evidence about the operator's present condition.
+
+The governing principle was:
+
+**evidence before narrative.**
+
+The system should not automatically treat a present-state self-interpretation as ground truth.
+
+### Physiology
+
+A physiological evidence channel.
+
+The implementation includes WHOOP ingestion for cycles, sleep, recovery, workouts, body measurements, and derived physiology features.
+
+Physiological data was intended to constrain interpretation, not define identity.
+
+### Execution
+
+The action-control layer.
+
+Execution stores:
+
+- state estimates
+- blocker estimates
+- policy decisions
+- re-entry artifacts
+- traces
+
+The important chain is:
+
+```text
+evidence → inference → policy → outcome
+```
+
+A policy decision can be traced back to the estimates that produced it, and a later trace can record what actually happened.
+
+### Re-entry
+
+Interruptions were treated as normal rather than exceptional.
+
+A re-entry artifact preserves enough state to restart a thread without reconstructing the entire problem:
+
+- last completed step
+- unresolved edge
+- smallest next move
+- trap to avoid
+- relevant context
+
+Re-entry was modeled as a first-class object because continuity loss was considered part of the system, not an edge case.
+
+### Aether
+
+Typed memory and knowledge.
+
+Aether was designed to preserve reusable cognitive objects rather than accumulate an undifferentiated archive.
+
+Its model includes concepts such as:
+
+- concepts
+- mechanisms
+- trade-offs
+- failure modes
+- heuristics
+- diagnostic questions
+- protocols
+- cases
+- rules
+- patterns
+- explicit edges between them
+
+The intention was to make memory useful for future judgment rather than merely searchable.
+
+### Reasoning
+
+Structured problem representation.
+
+The reasoning layer stores artifacts such as:
+
+- problems
+- problem structures
+- interrogations
+- decision briefs
+- option paths
+- contradiction reports
+
+The underlying idea was that the system should improve the shape of the problem before rushing to solve it.
+
+### Review and Calibration
+
+The system's correction layer.
+
+Review stores:
+
+- closures
+- review sessions
+- rule promotions
+- pattern updates
+- calibration records
+
+Calibration records were designed to compare earlier estimates with later outcomes.
+
+That makes it possible, at least architecturally, for the system to ask:
+
+**Was my previous interpretation actually accurate?**
+
+### System Audit
+
+The AI and retrieval audit layer records model runs, retrieval runs, events, and outbox state so that reasoning does not disappear into an opaque chat transcript.
+
+---
+
+## AI Fabric
+
+The implementation contains nine reasoning modules.
+
+### Core execution pipeline
+
+- **State Estimator** — estimates the operator's current operating state.
+- **Blocker Classifier** — identifies the dominant reason motion is failing.
+- **Policy Selector** — chooses an intervention and action depth appropriate to the estimated state.
+
+### Extended reasoning
+
+- **Router** — classifies incoming intent and chooses the appropriate reasoning path.
+- **Problem Structurer** — turns raw problems into explicit objectives, constraints, unknowns, assumptions, and bottlenecks.
+- **Context Retriever** — retrieves relevant material from the typed knowledge graph.
+- **Physiology Interpreter** — translates physiological signals into bounded capacity information.
+- **Contradiction Checker** — compares narrative against behavior, physiology, direction, and temporal patterns.
+- **Council** — runs multiple reasoning lenses and synthesizes agreement and tension.
+
+Claude is used as the reasoning backend for these modules. OpenAI embeddings are used for semantic retrieval.
+
+The model layer was intended to remain subordinate to the typed system around it.
+
+---
+
+## What was actually built
+
+This repository is more than an architecture document.
+
+The historical implementation includes:
+
 - Python 3.12+
 - FastAPI
 - SQLAlchemy 2.x async
-- Alembic (12 migrations)
-- PostgreSQL 16 + pgvector
-- Docker Compose local database setup
-- environment based config via `pydantic-settings`
-- httpx for external API integration
+- PostgreSQL 16
+- pgvector
+- Alembic
+- 13 database migrations
+- typed ORM models and Pydantic schemas
+- bounded service layers
+- API routes across the major contexts
+- WHOOP API client, mapping, and synchronization
+- semantic vector search
+- Claude-backed reasoning modules
+- OpenAI embedding support
+- system-level model/retrieval audit records
+- three materialized views for current state, active focus, and thread priority
+- service, reasoning-module, and API-route tests
 
-### Database infrastructure
-- 11 logical PostgreSQL schemas (`core`, `integration`, `vector_ctrl`, `evidence`, `execution`, `physiology`, `aether`, `reasoning`, `review`, `system`, `vector`)
-- 23 shared enum types
-- `pgvector` extension enabled
+The major bounded contexts represented in code are:
 
-### Implemented slices
+```text
+core
+integration
+vector_ctrl
+evidence
+execution
+physiology
+aether
+reasoning
+review
+system
+vector
+```
 
-All 8 bounded contexts are implemented with the full stack: Alembic migration, ORM models, Pydantic schemas, service layer, and API routes.
+---
 
-#### Core
-Root identity tables:
-- `core.operators`
-- `core.devices`
+## Implementation vs. architecture
 
-#### Integration
-External integration infrastructure:
-- `integration.oauth_connections`
-- `integration.permissions`
-- `integration.webhook_receipts`
+The architecture documents in this repository describe a larger intended system than the implementation reached.
 
-#### Vector control plane
-Directional governance, not task storage:
-- `vector_ctrl.life_arcs`
-- `vector_ctrl.seasons`
-- `vector_ctrl.missions`
-- `vector_ctrl.threads`
-- `vector_ctrl.thread_constraints`
-- `vector_ctrl.anti_goals`
+That distinction is deliberate.
 
-Includes ORM models, Pydantic schemas, `VectorService`, API routes.
+Some ideas were implemented deeply enough to have migrations, models, services, routes, and tests.
 
-#### Evidence sensing layer
-Captures what is true about the operator's present moment:
-- `evidence.subjective_checkins`
-- `evidence.behavior_events`
-- `evidence.context_snapshots`
-- `evidence.derived_features`
+Others remained design directions.
 
-Includes ORM models, Pydantic schemas, `EvidenceService`, API routes.
+The documents are preserved because they show the evolution of the system's reasoning, but they should not be read as claims that every proposed subsystem became a finished product.
 
-#### Execution core
-Closes the continuity loop:
-- `execution.state_estimates`
-- `execution.blocker_estimates`
-- `execution.reentry_artifacts`
-- `execution.policy_decisions`
-- `execution.traces`
+There is no attempt here to rewrite the historical record into a cleaner story than it was.
 
-Includes ORM models, Pydantic schemas, `ExecutionService`, API routes.
+---
 
-#### Physiology
-WHOOP as a first class subsystem:
-- `physiology.whoop_connections`
-- `physiology.whoop_body_measurements`
-- `physiology.whoop_cycles`
-- `physiology.whoop_sleeps`
-- `physiology.whoop_recoveries`
-- `physiology.whoop_workouts`
-- `physiology.physiology_features`
-- `physiology.biomarker_panels`
+## Architectural principles
 
-Includes ORM models, Pydantic schemas, `PhysiologyService` (with upsert semantics), API routes, and a fully implemented WHOOP API client with response mappers and sync orchestrator. The `POST /physiology/whoop/sync` endpoint triggers a full data pull from the WHOOP Developer API.
+Several ideas mattered more than any individual feature.
 
-#### Aether
-Typed memory and knowledge graph:
-- `aether.sources`
-- `aether.source_chunks`
-- `aether.extractions`
-- `aether.concepts`
-- `aether.mechanisms`
-- `aether.tradeoffs`
-- `aether.failure_modes`
-- `aether.heuristics`
-- `aether.diagnostic_questions`
-- `aether.protocols`
-- `aether.lens_packs`
-- `aether.lens_pack_items`
-- `aether.cases`
-- `aether.rules`
-- `aether.patterns`
-- `aether.edges`
+### State before planning
 
-Includes ORM models, Pydantic schemas, `AetherService`, API routes.
+The correct next action depends on the state of the operator executing it.
 
-#### Reasoning
-Problem structuring and decision artifacts:
-- `reasoning.problems`
-- `reasoning.problem_structures`
-- `reasoning.interrogations`
-- `reasoning.decision_briefs`
-- `reasoning.option_paths`
-- `reasoning.contradiction_reports`
+### Evidence before narrative
 
-Includes ORM models, Pydantic schemas, `ReasoningService`, API routes.
+Self-interpretation is evidence, not unquestionable truth.
 
-#### Review and calibration
-The system's immune layer:
-- `review.closures`
-- `review.review_sessions`
-- `review.rule_promotions`
-- `review.pattern_updates`
-- `review.calibration_records`
+### Direction before motion
 
-Includes ORM models, Pydantic schemas, `ReviewService`, API routes.
+Activity is not inherently progress.
 
-#### System audit
-AI orchestration and audit trail:
-- `system.model_providers`
-- `system.model_runs`
-- `system.retrieval_runs`
-- `system.event_log`
-- `system.outbox_events`
+### Re-entry as a first-class object
 
-Includes ORM models, Pydantic schemas, `SystemAuditService` (with outbox state management), API routes.
+A system designed for interruption should preserve the minimum state required to resume.
 
-## What is already working
+### Typed memory over accumulation
 
-Loop A is structurally present across the full data layer:
+If everything is a note, the system loses semantic structure.
 
-**direction -> sensing -> inference -> policy -> re entry -> trace**
+### Explicit confidence and provenance
 
-The system has persistence and API structure for:
+Inferred state should remain distinguishable from observed fact.
 
-- directional hierarchy (life arcs, seasons, missions, threads, anti goals)
-- sensing the present moment (subjective checkins, behavior events, context snapshots)
-- estimating state and blockers
-- storing policy decisions with full traceability
-- preserving re entry artifacts
-- recording what happened after action (traces)
-- physiology data ingestion from WHOOP (cycles, sleep, recovery, workouts)
-- typed knowledge and memory (Aether graph with 16 entity types)
-- problem structuring and decision artifacts
-- review sessions with rule promotions and calibration records
-- full AI orchestration audit trail (model runs, retrieval runs, event log)
+### Outcomes over persuasive explanations
 
-All 8 bounded contexts plus Vector Search are complete with 60+ ORM models, 13 Alembic migrations, 9 service classes, and 80+ API endpoints. Nine AI reasoning modules power the full AI Fabric. Three materialized views provide fast access to current state, active focus, and thread priority rankings. A comprehensive test suite covers service layer unit tests, AI module unit tests, and API route integration tests.
+A recommendation that sounds intelligent is still only a hypothesis until reality answers.
 
-#### Vector search
-Embedding storage and semantic retrieval via pgvector:
-- `vector.embeddings`
+### Calibration over permanent assumptions
 
-Includes ORM model, Pydantic schemas, `VectorSearchService` (with content-hash change detection, batch embedding, cosine similarity search, entity-to-entity similarity), API routes. Powered by OpenAI `text-embedding-3-small` (1536 dimensions) with HNSW index.
+The system should be able to compare previous estimates with subsequent outcomes and update accordingly.
 
-### AI Fabric
+### Separation of observation, judgment, and execution
 
-Nine reasoning modules form the complete AI Fabric:
+Sensing reality, interpreting reality, and acting on reality are different operations and should remain inspectable.
 
-**Core pipeline (Loop A):**
-- **State estimator** — classifies the operator into one of 10 operating states (recover, preserve, orient, clarify, reenter, execute, deep_work, close_loop, review, drift)
-- **Blocker classifier** — identifies the dominant blocker from 12 types (ambiguity, scope_overload, physiological_depletion, etc.)
-- **Policy selector** — selects an intervention kind and action depth matched to operator capacity
+---
 
-**Extended modules:**
-- **Router** — intent classification for incoming operator requests, dispatching to the correct pipeline (assess, structure_problem, retrieve_context, interpret_physiology, check_contradictions, deliberate, etc.)
-- **Problem structurer** — decomposes raw problems into structured reasoning artifacts (objective, stakes, actors, constraints, assumptions, unknowns, irreversibilities, bottlenecks, narrative layer, distortion candidates)
-- **Context retriever** — RAG over the Aether knowledge graph via vector search, with Claude-powered synthesis of retrieved fragments
-- **Physiology interpreter** — translates raw WHOOP data (recovery, sleep, HRV, strain) into actionable capacity signals and action-depth ceilings
-- **Contradiction checker** — detects inconsistencies between operator narrative and evidence (narrative_vs_behavior, physiology_vs_claim, vector_vs_action, state_vs_depth, temporal_pattern)
-- **Council** — multi-perspective deliberation with 4 lenses (risk analyst, opportunity scout, contrarian, state advisor) and synthesis into consensus/tension points
+## Why preserve this repository?
 
-All modules use Claude as the reasoning backend. The `POST /ai/assess` endpoint orchestrates the core pipeline. Additional endpoints: `POST /ai/route`, `POST /ai/structure-problem`, `POST /ai/retrieve`, `POST /ai/interpret-physiology`, `POST /ai/check-contradictions`, `POST /ai/deliberate`.
+Neurocognitive System is not the architecture I would build unchanged today.
 
-### Materialized views
+That is part of its value.
 
-Migration M013 creates three materialized views for fast querying:
-- **`execution.mv_current_state`** — latest state estimate, blocker estimate, and policy decision per operator (single row per operator via LATERAL joins)
-- **`vector_ctrl.mv_active_focus`** — active season, top-priority mission, and most recent active thread per operator
-- **`vector_ctrl.mv_thread_priority`** — ranks all active threads by a composite priority score (mission priority, thread decay, reentry risk, ambiguity)
+It preserves an earlier attempt to formalize several problems that continued to matter:
 
-### Test suite
+- continuity across interrupted work
+- explicit system state
+- evidence-backed inference
+- re-entry cost
+- typed memory
+- confidence and provenance
+- contradiction detection
+- action selection under variable capacity
+- outcome traces
+- calibration
+- review as a correction mechanism
 
-Comprehensive test coverage across three layers:
-- **`tests/conftest.py`** — async fixtures with transactional rollback isolation, service factories, AI module mocks (Claude + embeddings), and FastAPI test client
-- **`tests/test_services.py`** — service layer unit tests for Evidence, Execution, and Reasoning services (checkins, state estimates, blocker estimates, policy decisions, traces, reentry artifacts, problems, contradiction reports)
-- **`tests/test_ai_modules.py`** — unit tests for all 9 AI modules with mocked Claude responses, including parse failure fallbacks
-- **`tests/test_routes.py`** — API route integration tests for health, evidence, execution, and all AI endpoints (assess, route, structure-problem, interpret-physiology, check-contradictions, deliberate)
+Looking backward, the vocabulary changed more than the underlying questions.
 
-## Architecture philosophy
+The repository is useful as architecture archaeology: a record of how those ideas were represented before later systems refined them.
 
-Utopia is built around a few core principles.
+**The implementation is historical. The questions were not.**
 
-### 1. State before planning
-The problem is not "I forgot the task."
-The problem is often that the operator is in the wrong state for the depth of action being demanded.
+---
 
-### 2. Evidence before narrative
-The system should not trust self interpretation by default.
-It should compare subjective reports, behavior, context, and later physiology.
+## Historical terminology
 
-### 3. Direction before motion
-Threads only make sense relative to missions, seasons, and life arcs.
-Without direction, motion becomes drift.
+Some names in the code and architecture documents are preserved because they were part of the original system.
 
-### 4. Re entry is a first class object
-Interruptions are not edge cases.
-They are normal.
-A serious system must preserve continuity explicitly.
+- **Utopia** — original project codename
+- **Vector** — directional control plane
+- **Aether** — typed knowledge and memory
+- **Schrödinger** — original name for the policy-selection / "one correct move" concept
 
-### 5. Judgment compounds
-Over time, the system should become better at recognizing patterns, promoting rules, calibrating interpretation, and preserving what improves future decisions.
+These names should be read as historical terminology, not as a recommendation for how the same primitives would necessarily be named today.
+
+---
 
 ## Repository structure
 
-A simplified view of the current layout:
-
 ```text
 migrations/
-  versions/
-    001_create_schemas_and_enums.py
-    002_core_operators_and_devices.py
-    003_integration_tables.py
-    004_vector_ctrl_tables.py
-    005_evidence_tables.py
-    006_execution_tables.py
-    007_physiology_tables.py
-    008_aether_tables.py
-    009_reasoning_tables.py
-    010_review_tables.py
-    011_system_audit_tables.py
-    012_vector_embeddings.py
-    013_materialized_views.py
+  versions/                 # 13 historical Alembic migrations
 
 src/utopia/
-  api/
-    app.py
-    deps.py
-    routes/
-      vector.py
-      evidence.py
-      execution.py
-      physiology.py
-      aether.py
-      reasoning.py
-      review.py
-      system_audit.py
-      ai.py
-      vector_search.py
-  models/
-    core.py
-    integration.py
-    vector_ctrl.py
-    evidence.py
-    execution.py
-    physiology.py
-    aether.py
-    reasoning.py
-    review.py
-    system_audit.py
-    embedding.py
-  schemas/
-    vector_ctrl.py
-    evidence.py
-    execution.py
-    physiology.py
-    aether.py
-    reasoning.py
-    review.py
-    system_audit.py
-  services/
-    vector_service.py
-    evidence_service.py
-    execution_service.py
-    physiology_service.py
-    aether_service.py
-    reasoning_service.py
-    review_service.py
-    system_audit_service.py
-    vector_search_service.py
+  api/                      # FastAPI application and routes
+  models/                   # SQLAlchemy domain models
+  schemas/                  # Pydantic request/response contracts
+  services/                 # bounded-context service layer
   integrations/
-    whoop/
-      client.py
-      mapper.py
-      sync.py
-  ai/
-    providers/
-      claude.py
-      openai_embeddings.py
-    assess.py
-    state_estimator.py
-    blocker_classifier.py
-    policy_selector.py
-    router.py
-    problem_structurer.py
-    context_retriever.py
-    physiology_interpreter.py
-    contradiction_checker.py
-    council.py
+    whoop/                  # WHOOP client, mapping, sync
+  ai/                       # reasoning modules and providers
   config.py
   db.py
   enums.py
@@ -336,4 +424,57 @@ tests/
   test_services.py
   test_ai_modules.py
   test_routes.py
+
+docs/
+  adhd-visual-prosthetic-thesis.md
+
+Utopia Architecture.md
+Utopia Formal Architecture DB etc.md
 ```
+
+---
+
+## Local setup
+
+This is a historical repository, so setup instructions are preserved primarily for inspection and experimentation.
+
+### Requirements
+
+- Python 3.12+
+- Docker / Docker Compose
+- PostgreSQL 16 with pgvector
+
+### Environment
+
+Copy the example environment file and provide only the integrations you intend to use:
+
+```bash
+cp .env.example .env
+```
+
+Available configuration includes PostgreSQL, WHOOP, Anthropic, and OpenAI credentials.
+
+### Database
+
+```bash
+docker compose up -d
+alembic upgrade head
+```
+
+### Development
+
+Install the project and run the test suite using the configuration in `pyproject.toml`.
+
+---
+
+## Status
+
+**Historical / inactive / preserved.**
+
+There is no active product roadmap for this repository.
+
+Parts of the architecture may be extracted, rewritten, or reappear elsewhere, but this repository represents the system as it existed during this experiment.
+
+It is preserved as evidence of the design process, including ideas that worked, ideas that did not, and primitives that survived into later thinking.
+
+**The implementation is historical. The questions were not.**
