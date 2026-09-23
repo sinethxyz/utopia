@@ -1,15 +1,15 @@
 # Public release readiness
 
-**Status:** Ready except remaining owner release actions.
+**Status:** Ready for public preservation / portfolio release.
 
 This status refers to **public preservation / portfolio release**, not production deployment.
 
-The final public state is represented by:
+The final public state was assembled through:
 
 - **PR #4** — `Neurocognitive System v0.2 foundation cleanup`
-- **PR #5** — `Neurocognitive System v0.3 public release polish`, stacked on PR #4
+- **PR #5** — `Neurocognitive System v0.3 public release polish`
 
-Neither PR is merged by this cleanup.
+PR #4 was merged into `main` before PR #5 was retargeted to `main` for the final public-release pass.
 
 ## License
 
@@ -121,12 +121,14 @@ Recommended topics:
 
 The connected GitHub capability used for this cleanup can modify repository files, branches, and pull requests, but does not expose repository-settings writes. Description/topics therefore remain recommended metadata rather than silently claiming they were changed.
 
-## Owner decisions remaining
+## Optional repository metadata
 
-1. **Merge** — decide whether/when to merge PR #4, then PR #5 (or retarget #5 after #4 merges).
-2. **Historical tag/release** — decide whether to create `historical-utopia-v0.1` at the selected historical Utopia reference point.
+The code/documentation release itself does not depend on these metadata actions:
 
-No other architectural/product decision is required for public preservation.
+1. **Historical tag/release** — `historical-utopia-v0.1` may be created at the selected historical Utopia reference point.
+2. **Repository description/topics** — the recommended public description and topics above can be applied at repository-settings level.
+
+No other architectural or product decision is required for public preservation.
 
 ## Public-release conclusion
 
