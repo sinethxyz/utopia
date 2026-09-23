@@ -111,6 +111,8 @@ The cleaned architecture is documented in:
 - [Architecture overview](docs/architecture/overview.md)
 - [RFC-0001: Neurocognitive System](docs/rfcs/RFC-0001-neurocognitive-system.md)
 - [RFC-0002: Observation, Evidence, and Inference](docs/rfcs/RFC-0002-observation-evidence-inference.md)
+- [Sensor architecture](docs/architecture/sensors.md)
+- [RFC-0003: Sensor Adapter Contract](docs/rfcs/RFC-0003-sensor-adapter-contract.md)
 - [Historical terminology](docs/history/terminology.md)
 - [Static codebase audit](docs/audit/2026-09-23.md)
 
