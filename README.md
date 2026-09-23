@@ -216,9 +216,9 @@ Utopia is the historical project/codename. Neurocognitive System is the current 
 
 The original architecture material remains under [docs/history](docs/history/README.md) with its historical assumptions and terminology intact.
 
-The last repository state before the public-preservation reframing is currently identified as:
+The selected historical Utopia reference point is the last Utopia-specific repository state before an unrelated thesis document was added and before the later public-preservation reframing:
 
-`1b2b5dba817610711a38aea382fe563413ee6dab`
+`656c32b70cfac7a5ad7b94bb31451425fb6139bf`
 
 A proposed, **not yet created**, historical tag is:
 
