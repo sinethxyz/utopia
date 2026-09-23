@@ -39,7 +39,7 @@ class EmbeddingRead(BaseModel):
 
 class SearchRequest(BaseModel):
     query: str
-    operator_id: uuid.UUID | None = None
+    operator_id: uuid.UUID
     entity_kinds: list[str] | None = None
     top_k: int = Field(default=10, ge=1, le=100)
 
@@ -52,6 +52,7 @@ class SearchResultRead(BaseModel):
 
 
 class SimilarRequest(BaseModel):
+    operator_id: uuid.UUID
     entity_kind: str
     entity_id: uuid.UUID
     top_k: int = Field(default=5, ge=1, le=50)
@@ -144,7 +145,7 @@ async def find_similar(
 ) -> list[SearchResultRead]:
     """Find entities similar to a given entity."""
     results = await svc.find_similar(
-        data.entity_kind, data.entity_id, top_k=data.top_k
+        data.operator_id, data.entity_kind, data.entity_id, top_k=data.top_k
     )
     return [
         SearchResultRead(
