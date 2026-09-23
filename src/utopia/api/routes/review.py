@@ -108,6 +108,8 @@ async def record_rule_promotion(
     data: RulePromotionCreate,
     svc: ReviewService = Depends(get_review_service),
 ) -> RulePromotionRead:
+    if data.review_session_id != session_id:
+        raise HTTPException(status_code=422, detail="review_session_id must match the path")
     promotion = await svc.record_rule_promotion(data)
     await svc.commit()
     return RulePromotionRead.model_validate(promotion)
@@ -139,6 +141,8 @@ async def record_pattern_update(
     data: PatternUpdateCreate,
     svc: ReviewService = Depends(get_review_service),
 ) -> PatternUpdateRead:
+    if data.review_session_id != session_id:
+        raise HTTPException(status_code=422, detail="review_session_id must match the path")
     update = await svc.record_pattern_update(data)
     await svc.commit()
     return PatternUpdateRead.model_validate(update)
