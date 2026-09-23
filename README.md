@@ -281,7 +281,6 @@ docs/
   rfcs/                # redesign contracts
   audit/               # static audit record
   history/             # original Utopia design material
-  adhd-visual-prosthetic-thesis.md
 
 tests/
   test_services.py
