@@ -13,7 +13,7 @@ import uuid as _uuid
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from uuid_utils import uuid7
+from utopia.ids import new_uuid7
 
 from utopia.models.reasoning import (
     ContradictionReport,
@@ -52,7 +52,7 @@ class ReasoningService:
 
     async def create_problem(self, data: ProblemCreate) -> Problem:
         problem = Problem(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             title=data.title,
             raw_prompt=data.raw_prompt,
@@ -92,7 +92,7 @@ class ReasoningService:
         self, data: ProblemStructureCreate
     ) -> ProblemStructure:
         structure = ProblemStructure(
-            id=uuid7(),
+            id=new_uuid7(),
             problem_id=data.problem_id,
             objective=data.objective,
             stakes=data.stakes,
@@ -130,7 +130,7 @@ class ReasoningService:
 
     async def create_interrogation(self, data: InterrogationCreate) -> Interrogation:
         interrogation = Interrogation(
-            id=uuid7(),
+            id=new_uuid7(),
             problem_id=data.problem_id,
             interrogation_kind=data.interrogation_kind,
             questions=data.questions,
@@ -157,7 +157,7 @@ class ReasoningService:
 
     async def create_decision_brief(self, data: DecisionBriefCreate) -> DecisionBrief:
         brief = DecisionBrief(
-            id=uuid7(),
+            id=new_uuid7(),
             problem_id=data.problem_id,
             classification=data.classification,
             summary=data.summary,
@@ -190,7 +190,7 @@ class ReasoningService:
 
     async def add_option_path(self, data: OptionPathCreate) -> OptionPath:
         option = OptionPath(
-            id=uuid7(),
+            id=new_uuid7(),
             decision_brief_id=data.decision_brief_id,
             option_label=data.option_label,
             description=data.description,
@@ -223,7 +223,7 @@ class ReasoningService:
         self, data: ContradictionReportCreate
     ) -> ContradictionReport:
         report = ContradictionReport(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             problem_id=data.problem_id,
             contradiction_kind=data.contradiction_kind,
