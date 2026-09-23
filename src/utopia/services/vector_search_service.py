@@ -13,7 +13,7 @@ from dataclasses import dataclass
 
 from sqlalchemy import delete, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
-from uuid_utils import uuid7
+from utopia.ids import new_uuid7
 
 from utopia.ai.providers import openai_embeddings
 from utopia.config import settings
@@ -105,7 +105,7 @@ class VectorSearchService:
 
         # Create new
         emb = Embedding(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=operator_id,
             entity_kind=entity_kind,
             entity_id=entity_id,
@@ -169,7 +169,7 @@ class VectorSearchService:
                 results.append(existing)
             else:
                 emb = Embedding(
-                    id=uuid7(),
+                    id=new_uuid7(),
                     operator_id=operator_id,
                     entity_kind=entity_data["entity_kind"],
                     entity_id=entity_data["entity_id"],
