@@ -1,9 +1,8 @@
 """Vector search routes — embedding management and semantic retrieval."""
 
 import uuid
-from typing import Any
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 
 from utopia.api.deps import get_vector_search_service
