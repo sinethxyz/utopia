@@ -14,7 +14,7 @@ import uuid as _uuid
 from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
-from uuid_utils import uuid7
+from utopia.ids import new_uuid7
 
 from utopia.models.physiology import (
     BiomarkerPanel,
@@ -58,7 +58,7 @@ class PhysiologyService:
 
     async def connect_whoop(self, data: WhoopConnectionCreate) -> WhoopConnection:
         conn = WhoopConnection(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             oauth_connection_id=data.oauth_connection_id,
             scope_granted=data.scope_granted,
@@ -79,7 +79,7 @@ class PhysiologyService:
         self, data: WhoopBodyMeasurementCreate
     ) -> WhoopBodyMeasurement:
         measurement = WhoopBodyMeasurement(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             measured_at=data.measured_at,
             height_cm=data.height_cm,
@@ -100,7 +100,7 @@ class PhysiologyService:
         stmt = (
             pg_insert(WhoopCycle)
             .values(
-                id=uuid7(),
+                id=new_uuid7(),
                 operator_id=data.operator_id,
                 provider_cycle_id=data.provider_cycle_id,
                 whoop_user_id=data.whoop_user_id,
@@ -141,7 +141,7 @@ class PhysiologyService:
         stmt = (
             pg_insert(WhoopSleep)
             .values(
-                id=uuid7(),
+                id=new_uuid7(),
                 operator_id=data.operator_id,
                 provider_sleep_id=data.provider_sleep_id,
                 provider_cycle_id=data.provider_cycle_id,
@@ -185,7 +185,7 @@ class PhysiologyService:
         stmt = (
             pg_insert(WhoopRecovery)
             .values(
-                id=uuid7(),
+                id=new_uuid7(),
                 operator_id=data.operator_id,
                 provider_cycle_id=data.provider_cycle_id,
                 provider_sleep_id=data.provider_sleep_id,
@@ -230,7 +230,7 @@ class PhysiologyService:
         stmt = (
             pg_insert(WhoopWorkout)
             .values(
-                id=uuid7(),
+                id=new_uuid7(),
                 operator_id=data.operator_id,
                 provider_workout_id=data.provider_workout_id,
                 workout_type=data.workout_type,
@@ -268,7 +268,7 @@ class PhysiologyService:
         stmt = (
             pg_insert(PhysiologyFeature)
             .values(
-                id=uuid7(),
+                id=new_uuid7(),
                 operator_id=data.operator_id,
                 feature_date=data.feature_date,
                 feature_name=data.feature_name,
@@ -317,7 +317,7 @@ class PhysiologyService:
         self, data: BiomarkerPanelCreate
     ) -> BiomarkerPanel:
         panel = BiomarkerPanel(
-            id=uuid7(),
+            id=new_uuid7(),
             operator_id=data.operator_id,
             panel_date=data.panel_date,
             provider=data.provider,
