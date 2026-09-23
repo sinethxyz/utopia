@@ -3,184 +3,181 @@
 > **Historical codename: Utopia**  
 > **Status: historical / inactive / preserved**
 
-Neurocognitive System was an experimental, backend-first architecture for state-aware cognitive control.
+Neurocognitive System is a historical experiment in **multimodal cognitive-state estimation, continuity, reasoning, and adaptive control**.
 
-It was built around one assumption:
+It began from one assumption:
 
 **the operator is not stable.**
 
-Attention changes. Energy changes. Context disappears. Re-entry has a cost. Present-state narratives can be wrong. A system that assumes a permanently consistent operator will eventually recommend the wrong thing at the wrong depth.
+Attention changes. Energy changes. Context disappears. Re-entry has a cost. Self-report is useful but imperfect. Physiological and behavioral signals are useful but imperfect. The intended architecture was therefore not a task manager or an AI that simply "knows" the user.
 
-The experiment asked whether software could preserve continuity by maintaining explicit models of direction, evidence, state, blockers, policy, action, outcome, and calibration.
-
-Its central loop was:
+It was a system for maintaining explicit, testable hypotheses about the operator's current state and deciding what depth of action was appropriate.
 
 ```text
 Direction
-   ↓
+    ↓
+Sensing
+    ↓
+Observations
+    ↓
+Features
+    ↓
 Evidence
-   ↓
-State + Blocker Estimate
-   ↓
+    ↓
+Inference
+    ↓
 Policy
-   ↓
+    ↓
 Action / Re-entry
-   ↓
-Trace
-   ↓
-Review / Calibration
-   ↺
+    ↓
+Outcome
+    ↓
+Calibration
+    ↺
 ```
-
-The project is no longer actively developed as a product.
-
-It remains public because several architectural ideas explored here continued to recur in later systems.
 
 **The implementation is historical. The questions were not.**
 
 ---
 
-## The problem
+## What this repository contains
 
-Most productivity software assumes a relatively stable operator.
+The historical implementation includes:
 
-If the correct task is visible, the user can execute it.
+- Python 3.12+
+- FastAPI
+- PostgreSQL 16 + pgvector
+- SQLAlchemy + Alembic
+- 13 database migrations
+- typed ORM and Pydantic models
+- directional hierarchy: life arcs → seasons → missions → threads
+- subjective, behavioral, contextual, and derived evidence
+- WHOOP ingestion for sleep, recovery, cycles, workouts, and body measurements
+- state estimation, blocker classification, and policy selection
+- typed memory and semantic retrieval
+- structured problem reasoning
+- re-entry artifacts and execution traces
+- review and calibration records
+- model/retrieval audit data models
+- materialized read models
+- service, AI-module, and API tests
 
-If context is lost, they can reload it.
-
-If they stop moving, the problem is assumed to be motivation, planning, or discipline.
-
-This system explored a different model.
-
-The failure may be one of continuity.
-
-The operator may still know what matters in the abstract while temporarily losing access to the context, state, energy, or cognitive depth required to act on it.
-
-That produces a different set of questions:
-
-- What direction actually matters right now?
-- What evidence describes the operator's current condition?
-- What state is the operator in?
-- What is actually blocking motion?
-- What action depth is appropriate for that state?
-- What is the smallest correct next move?
-- How can interrupted work be re-entered without reconstructing everything?
-- What did reality reveal after the action?
-- Was the system's previous estimate actually correct?
-
-The goal was not to maximize visible activity.
-
-The goal was to preserve direction and choose the smallest defensible move given the available evidence.
+The Python package remains named `utopia` so the historical implementation stays intact.
 
 ---
 
-## Not a task manager
+## Multimodal intent
 
-Neurocognitive System was not designed as a conventional productivity application.
+WHOOP was the first implemented external sensor, not the intended endpoint.
 
-It was not primarily:
+The longer-term design was sensor-agnostic. It was meant to accept additional evidence sources such as:
 
-- a to-do list
-- a note-taking system
-- a mood tracker
-- a habit app
-- a diary
-- a generic second brain
-- a chatbot over personal data
+- behavioral telemetry
+- environment/context sensors
+- additional wearables
+- biomarkers
+- neurophysiological interfaces such as EEG devices, including systems in the class of Neurosity
 
-The architecture treated cognition and execution as a control problem.
+The goal was **not** to make any sensor authoritative.
 
-A recommendation was not supposed to be the end of the loop.
-
-It was a **claim** about what the operator should do next.
-
-That claim could later be compared with the outcome.
+The intended model was:
 
 ```text
-observation → inference → intervention → outcome → calibration
+imperfect sensor
+    ↓
+observation
+    ↓
+derived feature
+    ↓
+evidence
+    ↓
+state hypothesis
+    ↓
+policy
+    ↓
+outcome
+    ↓
+calibration
 ```
 
-That feedback loop is the important part.
+A future EEG integration would therefore contribute observations or derived features. It would not directly declare a cognitive state or diagnosis.
 
 ---
 
 ## Architecture
 
-The repository separates the system into bounded contexts rather than storing everything inside generic notes or chat history.
+The cleaned architecture is documented in:
 
-### Vector
+- [Architecture overview](docs/architecture/overview.md)
+- [RFC-0001: Neurocognitive System](docs/rfcs/RFC-0001-neurocognitive-system.md)
+- [RFC-0002: Observation, Evidence, and Inference](docs/rfcs/RFC-0002-observation-evidence-inference.md)
+- [Historical terminology](docs/history/terminology.md)
+- [Static codebase audit](docs/audit/2026-09-23.md)
 
-Directional control.
+The original Utopia documents are preserved unchanged under [docs/history](docs/history/README.md).
 
-Vector models what matters across different horizons:
+---
+
+## Core primitives
+
+### Direction
+
+Historical name: **Vector**.
+
+Direction represents what matters:
 
 ```text
 life arc → season → mission → thread
 ```
 
-It exists to prevent motion from being mistaken for progress.
+It exists to distinguish useful motion from drift.
 
-### Evidence
+### Sensing and Evidence
 
-The sensing layer.
+The system records subjective, behavioral, contextual, and physiological signals.
 
-It captures subjective, behavioral, contextual, and derived evidence about the operator's present condition.
+The cleaned architecture separates:
 
-The governing principle was:
+**observation ≠ evidence ≠ inference**
 
-**evidence before narrative.**
+A measurement is not automatically a conclusion.
 
-The system should not automatically treat a present-state self-interpretation as ground truth.
+### Inference
 
-### Physiology
+The historical AI Fabric estimates things such as:
 
-A physiological evidence channel.
+- current operating state
+- dominant blocker
+- contradictions between narrative and evidence
 
-The implementation includes WHOOP ingestion for cycles, sleep, recovery, workouts, body measurements, and derived physiology features.
+Inference should remain explicit about confidence, provenance, and failure.
 
-Physiological data was intended to constrain interpretation, not define identity.
+### Policy
 
-### Execution
+Historical name: **Schrödinger**.
 
-The action-control layer.
+Policy selects an intervention and action depth based on available evidence and inferred state.
 
-Execution stores:
-
-- state estimates
-- blocker estimates
-- policy decisions
-- re-entry artifacts
-- traces
-
-The important chain is:
-
-```text
-evidence → inference → policy → outcome
-```
-
-A policy decision can be traced back to the estimates that produced it, and a later trace can record what actually happened.
+A policy decision is a hypothesis about what to try next, not ground truth.
 
 ### Re-entry
 
-Interruptions were treated as normal rather than exceptional.
+Interrupted work is treated as normal.
 
-A re-entry artifact preserves enough state to restart a thread without reconstructing the entire problem:
+A re-entry artifact preserves:
 
 - last completed step
 - unresolved edge
 - smallest next move
 - trap to avoid
 - relevant context
+- freshness
 
-Re-entry was modeled as a first-class object because continuity loss was considered part of the system, not an edge case.
+### Memory
 
-### Aether
+Historical name: **Aether**.
 
-Typed memory and knowledge.
-
-Aether was designed to preserve reusable cognitive objects rather than accumulate an undifferentiated archive.
-
-Its model includes concepts such as:
+The system stores typed cognitive objects rather than treating all memory as notes:
 
 - concepts
 - mechanisms
@@ -192,289 +189,126 @@ Its model includes concepts such as:
 - cases
 - rules
 - patterns
-- explicit edges between them
+- explicit graph edges
 
-The intention was to make memory useful for future judgment rather than merely searchable.
+### Feedback and Calibration
 
-### Reasoning
+The historical implementation records traces, reviews, rule promotions, pattern updates, and calibration records.
 
-Structured problem representation.
-
-The reasoning layer stores artifacts such as:
-
-- problems
-- problem structures
-- interrogations
-- decision briefs
-- option paths
-- contradiction reports
-
-The underlying idea was that the system should improve the shape of the problem before rushing to solve it.
-
-### Review and Calibration
-
-The system's correction layer.
-
-Review stores:
-
-- closures
-- review sessions
-- rule promotions
-- pattern updates
-- calibration records
-
-Calibration records were designed to compare earlier estimates with later outcomes.
-
-That makes it possible, at least architecturally, for the system to ask:
-
-**Was my previous interpretation actually accurate?**
-
-### System Audit
-
-The AI and retrieval audit layer records model runs, retrieval runs, events, and outbox state so that reasoning does not disappear into an opaque chat transcript.
-
----
-
-## AI Fabric
-
-The implementation contains nine reasoning modules.
-
-### Core execution pipeline
-
-- **State Estimator** — estimates the operator's current operating state.
-- **Blocker Classifier** — identifies the dominant reason motion is failing.
-- **Policy Selector** — chooses an intervention and action depth appropriate to the estimated state.
-
-### Extended reasoning
-
-- **Router** — classifies incoming intent and chooses the appropriate reasoning path.
-- **Problem Structurer** — turns raw problems into explicit objectives, constraints, unknowns, assumptions, and bottlenecks.
-- **Context Retriever** — retrieves relevant material from the typed knowledge graph.
-- **Physiology Interpreter** — translates physiological signals into bounded capacity information.
-- **Contradiction Checker** — compares narrative against behavior, physiology, direction, and temporal patterns.
-- **Council** — runs multiple reasoning lenses and synthesizes agreement and tension.
-
-Claude is used as the reasoning backend for these modules. OpenAI embeddings are used for semantic retrieval.
-
-The model layer was intended to remain subordinate to the typed system around it.
-
----
-
-## What was actually built
-
-This repository is more than an architecture document.
-
-The historical implementation includes:
-
-- Python 3.12+
-- FastAPI
-- SQLAlchemy 2.x async
-- PostgreSQL 16
-- pgvector
-- Alembic
-- 13 database migrations
-- typed ORM models and Pydantic schemas
-- bounded service layers
-- API routes across the major contexts
-- WHOOP API client, mapping, and synchronization
-- semantic vector search
-- Claude-backed reasoning modules
-- OpenAI embedding support
-- system-level model/retrieval audit records
-- three materialized views for current state, active focus, and thread priority
-- service, reasoning-module, and API-route tests
-
-The major bounded contexts represented in code are:
+The intended end-state was a real feedback loop:
 
 ```text
-core
-integration
-vector_ctrl
-evidence
-execution
-physiology
-aether
-reasoning
-review
-system
-vector
+prediction → action → outcome → error → reliability update
 ```
 
----
-
-## Implementation vs. architecture
-
-The architecture documents in this repository describe a larger intended system than the implementation reached.
-
-That distinction is deliberate.
-
-Some ideas were implemented deeply enough to have migrations, models, services, routes, and tests.
-
-Others remained design directions.
-
-The documents are preserved because they show the evolution of the system's reasoning, but they should not be read as claims that every proposed subsystem became a finished product.
-
-There is no attempt here to rewrite the historical record into a cleaner story than it was.
+The historical code models this loop more completely than it executes it.
 
 ---
 
-## Architectural principles
+## What is implemented vs. what was intended
 
-Several ideas mattered more than any individual feature.
+This repository intentionally distinguishes implementation from architecture.
 
-### State before planning
+### Implemented
 
-The correct next action depends on the state of the operator executing it.
+Substantial backend/domain infrastructure exists for:
 
-### Evidence before narrative
+- Direction / Vector
+- Evidence
+- Execution
+- Physiology
+- Aether
+- Reasoning
+- Review
+- System Audit
+- vector search
+- WHOOP ingestion
+- AI reasoning modules
 
-Self-interpretation is evidence, not unquestionable truth.
+### Incomplete or architectural
 
-### Direction before motion
+Examples include:
 
-Activity is not inherently progress.
+- a complete authentication/authorization boundary
+- automatic model/retrieval audit wiring
+- a full encrypted OAuth/token lifecycle
+- automatic materialized-view refresh
+- calibration automatically changing future model/rule weighting
+- the complete cross-domain control loop
+- general sensor-adapter abstractions
+- EEG / Neurosity integration
 
-### Re-entry as a first-class object
-
-A system designed for interruption should preserve the minimum state required to resume.
-
-### Typed memory over accumulation
-
-If everything is a note, the system loses semantic structure.
-
-### Explicit confidence and provenance
-
-Inferred state should remain distinguishable from observed fact.
-
-### Outcomes over persuasive explanations
-
-A recommendation that sounds intelligent is still only a hypothesis until reality answers.
-
-### Calibration over permanent assumptions
-
-The system should be able to compare previous estimates with subsequent outcomes and update accordingly.
-
-### Separation of observation, judgment, and execution
-
-Sensing reality, interpreting reality, and acting on reality are different operations and should remain inspectable.
+These are documented as unfinished rather than presented as completed features.
 
 ---
 
-## Why preserve this repository?
+## Trust boundary
 
-Neurocognitive System is not the architecture I would build unchanged today.
+**Do not expose the historical API directly to an untrusted network.**
 
-That is part of its value.
+The current implementation was built as private prototype software and does not contain a complete authentication and authorization boundary.
 
-It preserves an earlier attempt to formalize several problems that continued to matter:
-
-- continuity across interrupted work
-- explicit system state
-- evidence-backed inference
-- re-entry cost
-- typed memory
-- confidence and provenance
-- contradiction detection
-- action selection under variable capacity
-- outcome traces
-- calibration
-- review as a correction mechanism
-
-Looking backward, the vocabulary changed more than the underlying questions.
-
-The repository is useful as architecture archaeology: a record of how those ideas were represented before later systems refined them.
-
-**The implementation is historical. The questions were not.**
+See [SECURITY.md](SECURITY.md).
 
 ---
 
-## Historical terminology
+## Medical boundary
 
-Some names in the code and architecture documents are preserved because they were part of the original system.
+Neurocognitive System is **not a medical diagnostic system**.
 
-- **Utopia** — original project codename
-- **Vector** — directional control plane
-- **Aether** — typed knowledge and memory
-- **Schrödinger** — original name for the policy-selection / "one correct move" concept
-
-These names should be read as historical terminology, not as a recommendation for how the same primitives would necessarily be named today.
+Physiological or future neurophysiological inputs are treated as imperfect evidence about operational state and usable capacity. They are not a basis for diagnosing medical or psychiatric conditions.
 
 ---
 
-## Repository structure
+## Repository layout
 
 ```text
-migrations/
-  versions/                 # 13 historical Alembic migrations
-
 src/utopia/
-  api/                      # FastAPI application and routes
-  models/                   # SQLAlchemy domain models
-  schemas/                  # Pydantic request/response contracts
-  services/                 # bounded-context service layer
-  integrations/
-    whoop/                  # WHOOP client, mapping, sync
-  ai/                       # reasoning modules and providers
-  config.py
-  db.py
-  enums.py
+  api/                 # historical FastAPI surface
+  models/              # SQLAlchemy domain model
+  schemas/             # Pydantic contracts
+  services/            # bounded-context services
+  integrations/whoop/  # implemented sensor integration
+  ai/                  # historical reasoning runtime
+
+migrations/
+  versions/            # 13 historical migrations
+
+docs/
+  architecture/        # cleaned architecture
+  rfcs/                # redesign contracts
+  audit/               # static audit record
+  history/             # original Utopia design material
+  adhd-visual-prosthetic-thesis.md
 
 tests/
-  conftest.py
   test_services.py
   test_ai_modules.py
   test_routes.py
-
-docs/
-  adhd-visual-prosthetic-thesis.md
-
-Utopia Architecture.md
-Utopia Formal Architecture DB etc.md
 ```
 
 ---
 
-## Local setup
+## Local inspection
 
-This is a historical repository, so setup instructions are preserved primarily for inspection and experimentation.
-
-### Requirements
-
-- Python 3.12+
-- Docker / Docker Compose
-- PostgreSQL 16 with pgvector
-
-### Environment
-
-Copy the example environment file and provide only the integrations you intend to use:
+This repository is preserved primarily for architecture inspection and experimentation.
 
 ```bash
 cp .env.example .env
-```
-
-Available configuration includes PostgreSQL, WHOOP, Anthropic, and OpenAI credentials.
-
-### Database
-
-```bash
 docker compose up -d
+pip install -e ".[dev]"
 alembic upgrade head
+pytest
 ```
 
-### Development
-
-Install the project and run the test suite using the configuration in `pyproject.toml`.
+Provider keys are optional unless exercising the corresponding external integrations.
 
 ---
 
 ## Status
 
-**Historical / inactive / preserved.**
+There is no active product roadmap for the historical Utopia application.
 
-There is no active product roadmap for this repository.
-
-Parts of the architecture may be extracted, rewritten, or reappear elsewhere, but this repository represents the system as it existed during this experiment.
-
-It is preserved as evidence of the design process, including ideas that worked, ideas that did not, and primitives that survived into later thinking.
+The cleanup exists to expose the durable architectural primitives without rewriting the prototype into something it never was.
 
 **The implementation is historical. The questions were not.**
