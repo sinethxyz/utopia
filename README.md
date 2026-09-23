@@ -340,11 +340,7 @@ A green scanner is evidence, not proof that a secret has never existed.
 
 ## License
 
-No software license has been selected yet.
-
-Until the owner chooses one, this should be described as a **public source repository** or **source-visible repository**, not as formally open source.
-
-Practical owner choices include MIT, Apache-2.0, or keeping the source visible without an open-source license.
+Licensed under the [Apache License 2.0](LICENSE).
 
 ---
 
