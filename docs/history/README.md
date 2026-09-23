@@ -9,3 +9,5 @@ They are intentionally retained with their original language, assumptions, and t
 - [Terminology map](terminology.md)
 
 These files are historical evidence, not statements that every described subsystem was implemented.
+
+For the verified pre-cleanup commit and proposed historical tag, see [Historical provenance](provenance.md).
