@@ -80,6 +80,7 @@ jobs:
               *Path("docs/rfcs").glob("*.md"),
               *Path("docs/audit").glob("*.md"),
               Path("docs/technical-debt.md"),
+              Path("docs/release-readiness.md"),
               Path("docs/history/README.md"),
               Path("docs/history/terminology.md"),
               Path("docs/history/provenance.md"),
